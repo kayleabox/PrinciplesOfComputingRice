@@ -9,6 +9,13 @@ def merge(line):
     merged_with_previous = False
     line_without_zeros = [value for value in line if value != 0]
     merged_line = []
+    
+    try_merge(merged_with_previous, line_without_zeros, merged_line)
+    while len(line) - len(merged_line) > 0:
+        merged_line.append(0)
+    return merged_line;
+
+def try_merge(merged_with_previous, line_without_zeros, merged_line):
     for index in range(len(line_without_zeros)):
         if index < len(line_without_zeros) - 1 and line_without_zeros[index] == line_without_zeros[index + 1]:
             if merged_with_previous == False:
@@ -20,6 +27,3 @@ def merge(line):
             if merged_with_previous != True:
                 merged_line.append(line_without_zeros[index])
             merged_with_previous = False
-    while len(line) - len(merged_line) > 0:
-        merged_line.append(0)
-    return merged_line;
