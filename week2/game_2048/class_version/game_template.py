@@ -34,6 +34,37 @@ class TwentyFortyEight:
         # replace with your code
         self._grid_height = grid_height
         self._grid_width = grid_width
+        self._move_grid_indices = {
+            "UP": [(0, index) for index in range(self.get_grid_width())],
+            "DOWN": [(self.get_grid_height() - 1, index) for index in range(self.get_grid_width())],
+            "RIGHT": [(index, self.get_grid_width() - 1) for index in range(self.get_grid_height())],
+            "LEFT": [(index, 0) for index in range(self.get_grid_width())]
+        }
+        #self.set_move_grid_indices(self.generate_move_grid_indices())
+
+    def set_move_grid_indices(self, move_dict):
+        """
+        Set the value of move_grid_indices
+        """
+        self._move_grid_indices = move_dict
+
+    def get_move_grid_indices(self):
+        """
+        Get move_grid_indices
+        """
+        return self._move_grid_indices
+
+    def generate_move_grid_indices(self):
+        """
+        Returns a dictionary with lists of indices for each row/column
+        in the grid
+        """    
+        return {
+            "UP": [(0, index) for index in range(self.get_grid_width())],
+            "DOWN": [(self.get_grid_height() - 1, index) for index in range(self.get_grid_width())],
+            "RIGHT": [(index, self.get_grid_width() - 1) for index in range(self.get_grid_height())],
+            "LEFT": [(index, 0) for index in range(self.get_grid_width())]
+        }
 
     def get_grid_height(self):
         """
@@ -97,9 +128,6 @@ class TwentyFortyEight:
         Return a string representation of the grid for debugging.
         """
         # replace with your code
-        #string_grid = ""
-        #for row in self._grid:
-        #    string_grid += str(row) + "\n"
         return str(self.get_grid()).replace('],', '],\n')
 
     def move(self, direction):
@@ -108,7 +136,16 @@ class TwentyFortyEight:
         a new tile if any tiles moved.
         """
         # replace with your code
-        pass
+        def create_temp_list_for_merge(row):
+            return [self.get_grid()[index][row] for index in range(self.get_grid_height())]
+
+        if direction in ("UP", "DOWN"):
+            for col in range(self.get_grid_width()):
+                print("merge line number " + str(col))
+                print create_temp_list_for_merge(col)
+                            
+        #else:
+            
 
     def new_tile(self):
         """
@@ -135,6 +172,11 @@ class TwentyFortyEight:
         return self.get_empty_tile(self.get_random_row_index(), self.get_random_col_index())
 
     def get_empty_tile(self, row, column):
+        """
+        Takes in the indexes of a tile in the grid and returns
+        it if it has a value of 0, if not it returns the 
+        indexes of a tile that does have a value of 0.
+        """
         while self.check_tile_is_empty(row, column) == False:
             row, column = self.get_random_row_index(), self.get_random_col_index()
         return row, column
@@ -154,6 +196,9 @@ class TwentyFortyEight:
 
 
 #poc_2048_gui.run_gui(TwentyFortyEight(4, 4))
-game = TwentyFortyEight(4, 2)
+game = TwentyFortyEight(4, 3)
 game.reset()
+game.new_tile()
+game.new_tile()
 print game.__str__()
+game.move("UP")

@@ -12,6 +12,14 @@ class InitTwentyFortyEightTest(unittest.TestCase):
     self.assertEqual(twenty_forty_eight._grid_height, 4)
     self.assertEqual(twenty_forty_eight._grid_width, 5)
 
+class SetMoveGridIndexesTwentyFortyEightTest(unittest.TestCase):
+  def test(self):
+    twenty_forty_eight = TwentyFortyEight()
+    move_grid_indices = twenty_forty_eight.get_move_grid_indices()
+    self.assertEqual(move_grid_indices["UP"], [(0,0), (0, 1), (0, 2), (0, 3)])
+    self.assertEqual(move_grid_indices["DOWN"], [(3,0), (3, 1), (3, 2), (3, 3)])
+    self.assertEqual(move_grid_indices["RIGHT"], [(0,3), (1, 3), (2, 3), (3, 3)])
+    self.assertEqual(move_grid_indices["LEFT"], [(0,0), (1, 0), (2, 0), (3, 0)])
 
 
 class GenerateEmptyGridTwentyFortyEightTest1(unittest.TestCase):
