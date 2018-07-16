@@ -158,3 +158,37 @@ class ResetTwentyFortyEightTest1(unittest.TestCase):
     twenty_forty_eight.reset()
     self.assertEquals(self.tiles_greater_zero(twenty_forty_eight._grid), 2)
     self.assertEquals(self.sum_of_tiles(twenty_forty_eight._grid) > 0, True)
+
+class MoveTilesTwentyFortyEightTest1(unittest.TestCase):
+  def set_up_game(self, game, direction):
+    game.set_grid([[0, 2, 2],
+                   [0, 0, 0],
+                   [0, 0, 2],
+                   [0, 0, 2]])
+    game.move(direction)
+
+  def test(self):
+    game = TwentyFortyEight(4, 3)
+    self.set_up_game(game, 1) # UP
+    self.assertEqual(game.get_grid(), [[0, 2, 4],
+                                       [0, 0, 2],
+                                       [0, 0, 0],
+                                       [0, 0, 0]])
+
+    self.set_up_game(game, 2) # DOWN
+    self.assertEqual(game.get_grid(), [[0, 0, 0],
+                                       [0, 0, 0],
+                                       [0, 0, 2],
+                                       [0, 2, 4]])
+
+    self.set_up_game(game, 3) # LEFT
+    self.assertEqual(game.get_grid(), [[4, 0, 0],
+                                       [0, 0, 0],
+                                       [2, 0, 0],
+                                       [2, 0, 0]])
+
+    self.set_up_game(game, 4) #RIGHT
+    self.assertEqual(game.get_grid(), [[0, 0, 4],
+                                       [0, 0, 0],
+                                       [0, 0, 2],
+                                       [0, 0, 2]])                                   

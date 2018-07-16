@@ -164,47 +164,62 @@ class TwentyFortyEight:
         # replace with your code
         return str(self.get_grid()).replace('],', '],\n')
 
+    def set_direction(self, value):
+        self._direction = value
+
+    def get_direction(self):
+        return self._direction
+
     def move(self, direction):
         """
         Move all tiles in the given direction and add
         a new tile if any tiles moved.
         """
         # replace with your code
+        self.set_direction(direction)
+
         if direction in (UP, DOWN):        
-            self.move_tiles(direction, self.get_grid_height())
+            self.move_tiles(self.get_grid_height())
         else:
-            self.move_tiles(direction, self.get_grid_width())
+            self.move_tiles(self.get_grid_width())
 
-
-    def move_tiles(self, direction, height_width):
+    def move_tiles(self, height_width):
         """
-        Implements merge and moves tiles
+        Implements merge and moves tiles to their new location on the grid
         """
         new_grid = self.generate_empty_grid()
-        for row in self.generate_index_grid(direction, height_width):
+        for row in self.generate_index_grid(height_width):
             temp_row = [self.get_grid()[pair[0]][pair[1]] for pair in row]
             temp_row = merge(temp_row)
             for index in range(len(row)):
                 new_grid[row[index][0]][row[index][1]] = temp_row [index]
-        if self.get_grid() != new_grid:
-            self.set_grid(new_grid)
-            self.new_tile()
+        #if self.get_grid() != new_grid:
+        #    self.set_grid(new_grid)
+        #    self.new_tile()
+        self.set_grid(new_grid)
 
-    def generate_index_grid(self, direction, height_width):
+    def generate_index_grid(self, height_width):
         """
         Generates a grid of the indices
         """
-        indices_grid = []
-        for index in self.get_move_grid_indices()[direction]:
-            temp = [index]
-            self.generate_row_indices(index[0], index[1], temp, direction, height_width)
-            indices_grid.append(temp)
-        return indices_grid
+        return [ self.add_to_indices_grid(index, height_width) 
+                         for index in self.get_move_grid_indices()[self.get_direction()]]
 
-    def generate_row_indices(self, index0, index1, temp, direction, height_width):
+    def add_to_indices_grid(self, index, height_width):
+        """
+        Adds each row of indices to the grid
+        """
+        temp = [index]
+        self.generate_row_indices(index[0], index[1], temp, height_width)
+        return temp
+
+    def generate_row_indices(self, index0, index1, temp, height_width):
+        """
+        Generates each row of indices to insert into the grid
+        """
         for dummy_number in range(height_width - 1):
-            index0 += OFFSETS[direction][0]
-            index1 += OFFSETS[direction][1]
+            index0 += OFFSETS[self.get_direction()][0]
+            index1 += OFFSETS[self.get_direction()][1]
             temp.append((index0, index1))
 
     def new_tile(self):
@@ -256,43 +271,3 @@ class TwentyFortyEight:
 
 
 #poc_2048_gui.run_gui(TwentyFortyEight(4, 4))
-print "DOWN"
-game = TwentyFortyEight(4, 3)
-game.reset()
-game.new_tile()
-game.new_tile()
-print game.__str__()
-game.move(DOWN)
-#print game.get_grid()
-print game.__str__()
-
-
-print "UP"
-game = TwentyFortyEight(4, 3)
-game.reset()
-game.new_tile()
-game.new_tile()
-print game.__str__()
-game.move(UP)
-#print game.get_grid()
-print game.__str__()
-
-print "RIGHT"
-game = TwentyFortyEight(4, 3)
-game.reset()
-game.new_tile()
-game.new_tile()
-print game.__str__()
-game.move(RIGHT)
-#print game.get_grid()
-print game.__str__()
-
-print "LEFT"
-game = TwentyFortyEight(4, 5)
-game.reset()
-game.new_tile()
-game.new_tile()
-print game.__str__()
-game.move(LEFT)
-#print game.get_grid()
-print game.__str__()
