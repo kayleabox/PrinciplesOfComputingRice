@@ -7,43 +7,26 @@ def merge(line):
     Function that merges a single row or column in 2048.
     """
     line_without_zeros = [value for value in line if value != 0]
-    merged_line = []
-    
-    try_merge(line_without_zeros, merged_line)
-    while len(line) - len(merged_line) > 0:
+    merged_line = try_merge(line_without_zeros)
+    while len(line) - len(merged_line) > 0: #still need to fix this guy
         merged_line.append(0)
     return merged_line;
 
-def try_merge(line_wo_zeros, merged_line):
+def try_merge(line_wo_zeros):
     """
     Attempts to merge each number in an array with the one after it.
     If the number was already merged with the one before it, 
     no merge will occur.
     """
-    merged_w_previous = False
-    for index in range(len(line_wo_zeros)):
-        if index < len(line_wo_zeros) - 1 and line_wo_zeros[index] == line_wo_zeros[index + 1]:
-            merged_w_previous = merge_if_not_merged_with_previous(merged_w_previous, merged_line, line_wo_zeros, index)
-        else: 
-            merged_w_previous = append_to_line_if_not_merged(merged_w_previous, merged_line, line_wo_zeros, index)
+    return [ get_new_value(line_wo_zeros, index, value) for index, value in enumerate(line_wo_zeros)]
 
-def merge_if_not_merged_with_previous(merged_with_previous, merged_line, line_without_zeros, index):
+def get_new_value(line_wo_zeros, index, value):
     """
-    Merges the number at the current index with the number 
-    at index + 1 if the number at index has not been merged
-    already. Then appends the merged number to a placeholder.
+    Return the value multiplied by 2 if it can be merged with the next one 
+    and remove the element at the next index
+    Return the value if it cannot be merged with the next one
     """
-    if merged_with_previous == False:
-        merged_line.append(line_without_zeros[index] + line_without_zeros[index + 1])
-        return True
-    else:
-        return False
-
-def append_to_line_if_not_merged(merged_with_previous, merged_line, line_without_zeros, index):
-    """
-    Appends numbers that are not eligible for merging with their
-    neighbors to the placeholder array.
-    """
-    if merged_with_previous != True:
-        merged_line.append(line_without_zeros[index])
-    return False
+    if index < len(line_wo_zeros) - 1 and value == line_wo_zeros[index + 1]:
+        line_wo_zeros.pop(index + 1)
+        return value * 2 
+    return value

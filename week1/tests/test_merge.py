@@ -1,8 +1,6 @@
 import unittest
 
-from merge import append_to_line_if_not_merged
 from merge import merge
-from merge import merge_if_not_merged_with_previous
 from merge import try_merge
 
 class MergeTest1(unittest.TestCase):
@@ -51,7 +49,7 @@ class MergeTest9(unittest.TestCase):
     self.assertEqual(merge([2,0]), [2, 0])
     self.assertEqual(merge([0,2]), [2, 0])
 
-class TryMergeTest(unittest.TestCase):
+"""class TryMergeTest(unittest.TestCase):
   def test(self):
     merged_line = []
     try_merge([8,8], merged_line)
@@ -69,20 +67,17 @@ class MergeIfNotMergedTest(unittest.TestCase):
     merged_with_previous = True
     merged_line = [4]
     line_without_zeros = [4, 4, 8]
-    merged_with_previous = merge_if_not_merged_with_previous(merged_with_previous, merged_line, line_without_zeros, 0)
-    self.assertEqual(merged_with_previous, False)
-    merged_with_previous = merge_if_not_merged_with_previous(merged_with_previous, merged_line, line_without_zeros, 0)
+    merged_with_previous = add_merged_value( merged_line, line_without_zeros, 0)
+    self.assertEqual(merged_with_previous, True)
+    merged_with_previous = add_merged_value( merged_line, line_without_zeros, 0)
     self.assertEqual(merged_with_previous, True)
 
 
 class AppendIfNotMergedTest(unittest.TestCase):
   def test(self):
-    merged_with_previous = True
+    merged_with_previous = False
     merged_line = [4]
     line_without_zeros = [4, 4, 8]
-    merged_with_previous = append_to_line_if_not_merged(merged_with_previous, merged_line, line_without_zeros, 0)
+    merged_with_previous = add_unmerged( merged_line, line_without_zeros[0])
     self.assertEqual(merged_with_previous, False)
-    self.assertEqual(merged_line, [4])
-    merged_with_previous = append_to_line_if_not_merged(merged_with_previous, merged_line, line_without_zeros, 2)
-    self.assertEqual(merged_with_previous, False)
-    self.assertEqual(merged_line, [4, 8])
+    self.assertEqual(merged_line, [4, 4])"""
