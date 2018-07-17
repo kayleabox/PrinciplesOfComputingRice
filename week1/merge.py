@@ -6,9 +6,9 @@ def merge(line):
     """
     Function that merges a single row or column in 2048.
     """
-    line_without_zeros = [value for value in line if value != 0]
-    return (try_merge(line_without_zeros) +
-           [0 for dummy_num in range(len(line) - len(line_without_zeros))])
+    non_zeros = [value for value in line if value != 0]
+    return (try_merge(non_zeros) +
+           [0 for dummy_num in range(len(line) - len(non_zeros))])
 
 def try_merge(line_wo_zeros):
     """
