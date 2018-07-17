@@ -46,8 +46,8 @@ empty_grid = twenty_forty_eight.generate_empty_grid()
 twenty_forty_eight.set_grid(empty_grid)
 class SelectTileIndexTwentyFortyEightTest1(unittest.TestCase):
   def test(self):
-    self.assertIsInstance(twenty_forty_eight.select_tile_index(), tuple)
-    row, col = twenty_forty_eight.select_tile_index()
+    self.assertIsInstance(twenty_forty_eight.select_tile(), tuple)
+    row, col = twenty_forty_eight.select_tile()
     self.assertEquals(0 <= row < 6, True)
     self.assertEquals(0 <= col < 4, True)
 

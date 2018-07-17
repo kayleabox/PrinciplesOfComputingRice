@@ -23,46 +23,27 @@ def merge(line):
     Function that merges a single row or column in 2048.
     """
     line_without_zeros = [value for value in line if value != 0]
-    merged_line = []
-    
-    try_merge(line_without_zeros, merged_line)
-    while len(line) - len(merged_line) > 0:
-        merged_line.append(0)
-    return merged_line;
+    return (try_merge(line_without_zeros) +
+           [0 for dummy_num in range(len(line) - len(line_without_zeros))])
 
-def try_merge(line_wo_zeros, merged_line):
+def try_merge(line_wo_zeros):
     """
     Attempts to merge each number in an array with the one after it.
     If the number was already merged with the one before it, 
     no merge will occur.
     """
-    merged_w_previous = False
-    for index in range(len(line_wo_zeros)):
-        if index < len(line_wo_zeros) - 1 and line_wo_zeros[index] == line_wo_zeros[index + 1]:
-            merged_w_previous = merge_if_not_merged(merged_w_previous, merged_line, line_wo_zeros, index)
-        else: 
-            merged_w_previous = append_to_line_if_not_merged(merged_w_previous, merged_line, line_wo_zeros, index)
+    return [ get_new_value(line_wo_zeros, index, value) for index, value in enumerate(line_wo_zeros)]
 
-def merge_if_not_merged(merged_with_previous, merged_line, line_without_zeros, index):
+def get_new_value(line_wo_zeros, index, value):
     """
-    Merges the number at the current index with the number 
-    at index + 1 if the number at index has not been merged
-    already. Then appends the merged number to a placeholder.
+    Return the value multiplied by 2 if it can be merged with the next one 
+    and remove the element at the next index
+    Return the value if it cannot be merged with the next one
     """
-    if merged_with_previous == False:
-        merged_line.append(line_without_zeros[index] + line_without_zeros[index + 1])
-        return True
-    else:
-        return False
-
-def append_to_line_if_not_merged(merged_with_previous, merged_line, line_without_zeros, index):
-    """
-    Appends numbers that are not eligible for merging with their
-    neighbors to the placeholder array.
-    """
-    if merged_with_previous != True:
-        merged_line.append(line_without_zeros[index])
-    return False
+    if index < len(line_wo_zeros) - 1 and value == line_wo_zeros[index + 1]:
+        line_wo_zeros.pop(index + 1)
+        return value * 2 
+    return value
 
 class TwentyFortyEight:
     """
@@ -165,9 +146,15 @@ class TwentyFortyEight:
         return str(self.get_grid()).replace('],', '],\n')
 
     def set_direction(self, value):
+        """
+        Sets the direction of the move
+        """
         self._direction = value
 
     def get_direction(self):
+        """
+        Returns the direction of the move
+        """
         return self._direction
 
     def move(self, direction):
@@ -189,14 +176,16 @@ class TwentyFortyEight:
         """
         new_grid = self.generate_empty_grid()
         for row in self.generate_index_grid(height_width):
-            temp_row = [self.get_grid()[pair[0]][pair[1]] for pair in row]
-            temp_row = merge(temp_row)
-            for index in range(len(row)):
-                new_grid[row[index][0]][row[index][1]] = temp_row [index]
+            self.add_merged_to_temp_grid(row, new_grid)
         #if self.get_grid() != new_grid:
         #    self.set_grid(new_grid)
         #    self.new_tile()
         self.set_grid(new_grid)
+
+    def add_merged_to_temp_grid(self, row, new_grid):
+        temp_row = merge([self.get_grid()[pair[0]][pair[1]] for pair in row])
+        for index, value in enumerate(row):
+            new_grid[value[0]][value[1]] = temp_row [index]
 
     def generate_index_grid(self, height_width):
         """
@@ -209,18 +198,18 @@ class TwentyFortyEight:
         """
         Adds each row of indices to the grid
         """
-        temp = [index]
-        self.generate_row_indices(index[0], index[1], temp, height_width)
-        return temp
+        return [index] + self.generate_row_indices(index[0], index[1], height_width)
 
-    def generate_row_indices(self, index0, index1, temp, height_width):
+    def generate_row_indices(self, index0, index1, height_width):
         """
         Generates each row of indices to insert into the grid
         """
+        temp = []
         for dummy_number in range(height_width - 1):
             index0 += OFFSETS[self.get_direction()][0]
             index1 += OFFSETS[self.get_direction()][1]
             temp.append((index0, index1))
+        return temp
 
     def new_tile(self):
         """
@@ -229,7 +218,7 @@ class TwentyFortyEight:
         4 10% of the time.
         """
         # replace with your code
-        row, column = self.select_tile_index()
+        row, column = self.select_tile()
         self.set_tile(row, column, 2) if random.randint(0,100) < 90 else self.set_tile(row, column, 4)
 
     def check_tile_is_empty(self, row, col):
@@ -239,7 +228,7 @@ class TwentyFortyEight:
         """
         return self.get_tile(row, col) == 0
 
-    def select_tile_index(self):
+    def select_tile(self):
         """
         Returns a tuple with a randomly selected coordinate 
         pair in the grid that has a current value of 0
@@ -252,7 +241,7 @@ class TwentyFortyEight:
         it if it has a value of 0, if not it returns the 
         indexes of a tile that does have a value of 0.
         """
-        while self.check_tile_is_empty(row, column) == False:
+        while not self.check_tile_is_empty(row, column):
             row, column = self.get_random_row_index(), self.get_random_col_index()
         return row, column
 
