@@ -191,8 +191,8 @@ class TwentyFortyEight:
         """
         Generates a grid of the indices
         """
-        return [ self.add_to_indices_grid(index, height_width) 
-                         for index in self.get_move_grid_indices()[self.get_direction()]]
+        return [self.add_to_indices_grid(index, height_width) 
+                for index in self.get_move_grid_indices()[self.get_direction()]]
 
     def add_to_indices_grid(self, index, height_width):
         """
