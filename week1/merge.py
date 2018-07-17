@@ -7,10 +7,8 @@ def merge(line):
     Function that merges a single row or column in 2048.
     """
     line_without_zeros = [value for value in line if value != 0]
-    merged_line = try_merge(line_without_zeros)
-    while len(line) - len(merged_line) > 0: #still need to fix this guy
-        merged_line.append(0)
-    return merged_line;
+    return (try_merge(line_without_zeros) +
+           [0 for dummy_num in range(len(line) - len(line_without_zeros))])
 
 def try_merge(line_wo_zeros):
     """

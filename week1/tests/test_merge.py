@@ -1,5 +1,6 @@
 import unittest
 
+from merge import get_new_value
 from merge import merge
 from merge import try_merge
 
@@ -49,35 +50,15 @@ class MergeTest9(unittest.TestCase):
     self.assertEqual(merge([2,0]), [2, 0])
     self.assertEqual(merge([0,2]), [2, 0])
 
-"""class TryMergeTest(unittest.TestCase):
+class TryMergeTest(unittest.TestCase):
   def test(self):
-    merged_line = []
-    try_merge([8,8], merged_line)
-    self.assertEqual(merged_line, [16])
-    merged_line = []
-    try_merge([2,4], merged_line)
-    self.assertEqual(merged_line, [2, 4])
-    merged_line = []
-    try_merge([2, 2, 4, 8], merged_line)
-    self.assertEqual(merged_line, [4, 4, 8])
+    self.assertEqual(try_merge([8,8]), [16])
+    self.assertEqual(try_merge([2,4]), [2, 4])
+    self.assertEqual(try_merge([2, 2, 4, 8]), [4, 4, 8])
 
-
-class MergeIfNotMergedTest(unittest.TestCase):
+class GetNewValueMergeTest(unittest.TestCase):
   def test(self):
-    merged_with_previous = True
-    merged_line = [4]
-    line_without_zeros = [4, 4, 8]
-    merged_with_previous = add_merged_value( merged_line, line_without_zeros, 0)
-    self.assertEqual(merged_with_previous, True)
-    merged_with_previous = add_merged_value( merged_line, line_without_zeros, 0)
-    self.assertEqual(merged_with_previous, True)
-
-
-class AppendIfNotMergedTest(unittest.TestCase):
-  def test(self):
-    merged_with_previous = False
-    merged_line = [4]
-    line_without_zeros = [4, 4, 8]
-    merged_with_previous = add_unmerged( merged_line, line_without_zeros[0])
-    self.assertEqual(merged_with_previous, False)
-    self.assertEqual(merged_line, [4, 4])"""
+    self.assertEqual(get_new_value([8, 8], 0, 8), 16)
+    self.assertEqual(get_new_value([8, 8], 1, 8), 8)
+    self.assertEqual(get_new_value([4, 2, 2, 8,8], 1, 2), 4)
+    self.assertEqual(get_new_value([4, 2, 2, 8,8], 2, 2), 2)
