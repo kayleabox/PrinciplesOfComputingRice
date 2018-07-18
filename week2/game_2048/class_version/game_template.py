@@ -26,7 +26,6 @@ class TwentyFortyEight:
     """
 
     def __init__(self, grid_height = 4, grid_width = 4):
-        # replace with your code
         self._grid_height = grid_height
         self._grid_width = grid_width
         self._grid = self.generate_empty_grid()
@@ -60,14 +59,12 @@ class TwentyFortyEight:
         """
         Get the height of the board.
         """
-        # replace with your code
         return self._grid_height
 
     def get_grid_width(self):
         """
         Get the width of the board.
         """
-        # replace with your code
         return self._grid_width
 
     def get_grid(self):
@@ -86,14 +83,12 @@ class TwentyFortyEight:
         """
         Set the tile at position row, col to have the given value.
         """
-        # replace with your code
         self._grid[row][col] = value
 
     def get_tile(self, row, col):
         """
         Return the value of the tile at position row, col.
         """
-        # replace with your code
         return self._grid[row][col]
 
     def reset(self):
@@ -101,10 +96,8 @@ class TwentyFortyEight:
         Reset the game so the grid is empty except for two
         initial tiles.
         """
-        # replace with your code
         #self.set_grid(self.generate_empty_grid())
-        for dummy_num in range(2):
-            self.new_tile()
+        [self.new_tile() for dummy_num in range(2)]
 
     def generate_empty_grid(self):
         """
@@ -117,7 +110,6 @@ class TwentyFortyEight:
         """
         Return a string representation of the grid for debugging.
         """
-        # replace with your code
         return str(self.get_grid()).replace('],', '],\n')
 
     def set_direction(self, value):
@@ -137,7 +129,6 @@ class TwentyFortyEight:
         Move all tiles in the given direction and add
         a new tile if any tiles moved.
         """
-        # replace with your code
         self.set_direction(direction)
 
         if direction in (UP, DOWN):        
@@ -147,18 +138,21 @@ class TwentyFortyEight:
 
     def move_tiles(self, height_width):
         """
-        Implements merge and moves tiles to their new location on the grid
+        Moves tiles to their new location on the grid
         """
         new_grid = self.generate_empty_grid()
         for row in self.generate_index_grid(height_width):
-            self.add_merged_to_temp_grid(row, new_grid)
+            self.add_merged_to_grid(row, new_grid)
         #if self.get_grid() != new_grid:
         #    self.set_grid(new_grid)
         #    self.new_tile()
         self.set_grid(new_grid)
 
-    def add_merged_to_temp_grid(self, row, new_grid):
-        temp_row = merge([self.get_grid()[pair[0]][pair[1]] for pair in row])
+    def add_merged_to_grid(self, row, new_grid):
+        """
+        Calls merge on each row and adds it to a placeholder grid
+        """
+        temp_row = merge([self.get_tile(pair[0],pair[1]) for pair in row])
         for index, value in enumerate(row):
             new_grid[value[0]][value[1]] = temp_row [index]
 
@@ -192,7 +186,6 @@ class TwentyFortyEight:
         square.  The tile should be 2 90% of the time and
         4 10% of the time.
         """
-        # replace with your code
         row, column = self.select_tile()
         self.set_tile(row, column, 2) if random.randint(0,100) < 90 else self.set_tile(row, column, 4)
 
