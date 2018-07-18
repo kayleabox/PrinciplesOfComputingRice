@@ -3,6 +3,8 @@ Clone of 2048 game.
 """
 import random
 
+from merge import merge
+
 #import poc_2048_gui
 
 # Directions, DO NOT MODIFY
@@ -17,33 +19,6 @@ OFFSETS = {UP: (1, 0),
            DOWN: (-1, 0),
            LEFT: (0, 1),
            RIGHT: (0, -1)}
-
-def merge(line):
-    """
-    Function that merges a single row or column in 2048.
-    """
-    line_without_zeros = [value for value in line if value != 0]
-    return (try_merge(line_without_zeros) +
-           [0 for dummy_num in range(len(line) - len(line_without_zeros))])
-
-def try_merge(line_wo_zeros):
-    """
-    Attempts to merge each number in an array with the one after it.
-    If the number was already merged with the one before it, 
-    no merge will occur.
-    """
-    return [ get_new_value(line_wo_zeros, index, value) for index, value in enumerate(line_wo_zeros)]
-
-def get_new_value(line_wo_zeros, index, value):
-    """
-    Return the value multiplied by 2 if it can be merged with the next one 
-    and remove the element at the next index
-    Return the value if it cannot be merged with the next one
-    """
-    if index < len(line_wo_zeros) - 1 and value == line_wo_zeros[index + 1]:
-        line_wo_zeros.pop(index + 1)
-        return value * 2 
-    return value
 
 class TwentyFortyEight:
     """
@@ -241,8 +216,8 @@ class TwentyFortyEight:
         it if it has a value of 0, if not it returns the 
         indexes of a tile that does have a value of 0.
         """
-        while not self.check_tile_is_empty(row, column):
-            row, column = self.get_random_row_index(), self.get_random_col_index()
+        if not self.check_tile_is_empty(row, column):
+            return self.get_empty_tile(self.get_random_row_index(), self.get_random_col_index())
         return row, column
 
     def get_random_row_index(self):
