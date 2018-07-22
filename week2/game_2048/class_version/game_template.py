@@ -25,7 +25,7 @@ class TwentyFortyEight:
     Class to run the game logic.
     """
 
-    def __init__(self, grid_height = 4, grid_width = 4):
+    def __init__(self, grid_height=4, grid_width=4):
         self._grid_height = grid_height
         self._grid_width = grid_width
         self._grid = self.generate_empty_grid()
@@ -47,7 +47,7 @@ class TwentyFortyEight:
         """
         Returns a dictionary with lists of indices for each row/column
         in the grid
-        """    
+        """
         return {
             UP: [(0, index) for index in range(self.get_grid_width())],
             DOWN: [(self.get_grid_height() - 1, index) for index in range(self.get_grid_width())],
@@ -104,7 +104,8 @@ class TwentyFortyEight:
         Generates an empty grid of the size
         _grid_height by _grid_width
         """
-        return [[ 0 for dummy_col in range(self._grid_width)] for dummy_row in range(self._grid_height)]
+        return [[0 for dummy_col in range(self._grid_width)]
+                for dummy_row in range(self._grid_height)]
 
     def __str__(self):
         """
@@ -131,7 +132,7 @@ class TwentyFortyEight:
         """
         self.set_direction(direction)
 
-        if direction in (UP, DOWN):        
+        if direction in (UP, DOWN):
             self.move_tiles(self.get_grid_height())
         else:
             self.move_tiles(self.get_grid_width())
@@ -141,8 +142,7 @@ class TwentyFortyEight:
         Moves tiles to their new location on the grid
         """
         new_grid = self.generate_empty_grid()
-        for row in self.generate_index_grid(height_width):
-            self.add_merged_to_grid(row, new_grid)
+        [self.add_merged_to_grid(row, new_grid) for row in self.generate_index_grid(height_width)]
         #if self.get_grid() != new_grid:
         #    self.set_grid(new_grid)
         #    self.new_tile()
@@ -152,33 +152,39 @@ class TwentyFortyEight:
         """
         Calls merge on each row and adds it to a placeholder grid
         """
-        temp_row = merge([self.get_tile(pair[0],pair[1]) for pair in row])
+        temp_row = merge([self.get_tile(pair[0], pair[1]) for pair in row])
         for index, value in enumerate(row):
-            new_grid[value[0]][value[1]] = temp_row [index]
+            new_grid[value[0]][value[1]] = temp_row[index]
 
     def generate_index_grid(self, height_width):
         """
         Generates a grid of the indices
         """
-        return [self.add_to_indices_grid(index, height_width) 
+        return [self.add_to_indices_grid(index, height_width)
                 for index in self.get_move_grid_indices()[self.get_direction()]]
 
     def add_to_indices_grid(self, index, height_width):
         """
         Adds each row of indices to the grid
         """
-        return [index] + self.generate_row_indices(index[0], index[1], height_width)
+        return [index] + self.row_indices(index[0], index[1], height_width)
+
+    def row_indices(self, index0, index1, height_width):
+        """
+        Creates an array of the remaining rows of indices
+        to insert into the grid
+        """
+        return [row_index for row_index in self.generate_row_indices(index0, index1, height_width)]
 
     def generate_row_indices(self, index0, index1, height_width):
         """
-        Generates each row of indices to insert into the grid
+        Uses a generator to yield each index to be appended to the
+        grid of indices
         """
-        temp = []
         for dummy_number in range(height_width - 1):
             index0 += OFFSETS[self.get_direction()][0]
             index1 += OFFSETS[self.get_direction()][1]
-            temp.append((index0, index1))
-        return temp
+            yield index0, index1
 
     def new_tile(self):
         """
@@ -187,18 +193,18 @@ class TwentyFortyEight:
         4 10% of the time.
         """
         row, column = self.select_tile()
-        self.set_tile(row, column, 2) if random.randint(0,100) < 90 else self.set_tile(row, column, 4)
+        self.set_tile(row, column, 2) if random.randint(0, 100) < 90 else self.set_tile(row, column, 4)
 
     def check_tile_is_empty(self, row, col):
         """
         Takes in a row and column and returns True
-        if the value of grid[row, column] == 0  
+        if the value of grid[row, column] == 0
         """
         return self.get_tile(row, col) == 0
 
     def select_tile(self):
         """
-        Returns a tuple with a randomly selected coordinate 
+        Returns a tuple with a randomly selected coordinate
         pair in the grid that has a current value of 0
         """
         return self.get_empty_tile(self.get_random_row_index(), self.get_random_col_index())
@@ -206,7 +212,7 @@ class TwentyFortyEight:
     def get_empty_tile(self, row, column):
         """
         Takes in the indexes of a tile in the grid and returns
-        it if it has a value of 0, if not it returns the 
+        it if it has a value of 0, if not it returns the
         indexes of a tile that does have a value of 0.
         """
         if not self.check_tile_is_empty(row, column):

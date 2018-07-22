@@ -12,7 +12,7 @@ def try_merge(line_wo_zeros):
     If the number was already merged with the one before it, 
     no merge will occur.
     """
-    return [ get_new_value(line_wo_zeros, index, value) for index, value in enumerate(line_wo_zeros)]
+    return [get_new_value(line_wo_zeros, index, value) for index, value in enumerate(line_wo_zeros)]
 
 def get_new_value(line_wo_zeros, index, value):
     """
@@ -20,7 +20,10 @@ def get_new_value(line_wo_zeros, index, value):
     and remove the element at the next index
     Return the value if it cannot be merged with the next one
     """
-    if index < len(line_wo_zeros) - 1 and value == line_wo_zeros[index + 1]:
+    def _can_merge():
+        return index < len(line_wo_zeros) - 1 and value == line_wo_zeros[index + 1]
+
+    if _can_merge():
         line_wo_zeros.pop(index + 1)
         return value * 2 
     return value
