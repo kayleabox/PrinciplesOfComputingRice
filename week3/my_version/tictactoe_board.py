@@ -148,14 +148,6 @@ class TicTacToeBoard(object):
         return [[self.board[col][row] for col in range(self.dimension)]
                 for row in range(self.dimension)]
 
-
-    # def check_rows(self):
-    #     """
-    #     Checks to see if there is a winning row
-    #     """
-    #     return [row[0] for row in self.board
-    #             if len(set(row)) == 1 and set(row) != set([EMPTY])]
-
     def check_grid(self, grid):
         """
         Returns an array with winning player in it if there is a winner
@@ -172,13 +164,6 @@ class TicTacToeBoard(object):
         if len(set(row)) == 1 and not set(row) == set([EMPTY]):
             return [row[0]]
         return []
-
-    # def check_columns(self):
-    #     """
-    #     Checks to see if there is a winning column
-    #     """
-    #     return [col[0] for col in self.column_grid()
-    #             if len(set(col)) == 1 and not set(col) == set([EMPTY])]
 
     def uleft_bright(self):
         """
@@ -199,6 +184,6 @@ class TicTacToeBoard(object):
         Return a copy of the board.
         """
         return TicTacToeBoard(self.dimension, self._reverse, self.board)
-        #return self.board[:]
+
 
 
