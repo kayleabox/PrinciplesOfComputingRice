@@ -4,10 +4,10 @@ Monte Carlo Tic-Tac-Toe Player
 
 import random
 
+from tictactoe_board import DRAW
+from tictactoe_board import EMPTY
 from tictactoe_board import switch_player
 
-from tictactoe_board import EMPTY
-from tictactoe_board import DRAW
 
 SCORE = 1.0
 

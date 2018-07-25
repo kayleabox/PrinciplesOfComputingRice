@@ -1,11 +1,12 @@
 """
 Runs the monte carlo simulation for specified number of times
 """
-from tictactoe_board import switch_player
-from tictactoe_board import TicTacToeBoard
+
+from monte_carlo_tictactoe import mc_move
 from tictactoe_board import PLAYERO
 from tictactoe_board import PLAYERX
-from monte_carlo_tictactoe import mc_move
+from tictactoe_board import switch_player
+from tictactoe_board import TicTacToeBoard
 
 #number_trails_to_run = int(input ("how many trials would you like to run?"))
 

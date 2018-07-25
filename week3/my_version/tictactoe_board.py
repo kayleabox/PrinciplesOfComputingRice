@@ -13,6 +13,10 @@ PLAYER = {
 }
 
 def switch_player(player):
+    """
+    Switch the current value of player to PLAYERX if it is PLAYERO
+    or PLAYERO if it is currently PLAYERX
+    """
     if player == PLAYERO:
         return PLAYERX
     return PLAYERO
@@ -130,8 +134,8 @@ class TicTacToeBoard(object):
         game_checks = {
             "rows": self.check_grid(self.board),
             "columns": self.check_grid(self.column_grid()),
-            "uleft_diagonal": self.check_diagonal(self.uleft_bright()),
-            "bleft_diagonal": self.check_diagonal(self.bleft_uright())
+            "uleft_diagonal": self.check_diagonal(self.uleft_bright_diagonal()),
+            "bleft_diagonal": self.check_diagonal(self.bleft_uright_diagonal())
         }
         for check in game_checks:
             if game_checks[check] != []:
@@ -165,14 +169,14 @@ class TicTacToeBoard(object):
             return [row[0]]
         return []
 
-    def uleft_bright(self):
+    def uleft_bright_diagonal(self):
         """
         Returns a list of the values in the diagonal from upper
         left corner to bottom right
         """
         return[self.board[dim][dim] for dim in range(self.dimension)]
 
-    def bleft_uright(self):
+    def bleft_uright_diagonal(self):
         """
         Returns a list of the values in the diagonal
         going from bottom left to upper right corner
