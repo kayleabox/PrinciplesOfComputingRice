@@ -28,12 +28,18 @@ class TicTacToeBoardTest1(unittest.TestCase):
     tictactoe_board = TicTacToeBoard(5, False, None)
     self.assertEqual(tictactoe_board.board, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
 
+# class TicTacToeBoardCloneTest(unittest.TestCase):
+#   def test(self):
+#     tictactoe_board = TicTacToeBoard(5, False, None)
+#     clone = tictactoe_board.clone()
+#     self.assertEqual(clone, tictactoe_board.board[:])
+#     self.assertEqual(clone, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
+
 class TicTacToeBoardCloneTest(unittest.TestCase):
   def test(self):
-    tictactoe_board = TicTacToeBoard(5, False, None)
-    clone = tictactoe_board.clone()
-    self.assertEqual(clone, tictactoe_board.board[:])
-    self.assertEqual(clone, [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
+    board = TicTacToeBoard(5, False, None)
+    clone = board.clone()
+    self.assertNotEqual(clone, board)
 
 class TicTacToeBoardNewBoardTest1(unittest.TestCase):
   def test(self):

@@ -1,11 +1,11 @@
 import unittest
 
-from cv_tictactoe_board import switch_player
+from tictactoe_board import switch_player
 
-from cv_tictactoe_board import TicTacToeBoard
+from tictactoe_board import TicTacToeBoard
 
-from cv_tictactoe_board import PLAYERO
-from cv_tictactoe_board import PLAYERX
+from tictactoe_board import PLAYERO
+from tictactoe_board import PLAYERX
 
 from monte_carlo_tictactoe import mc_move
 from monte_carlo_tictactoe import mc_trial

@@ -3,18 +3,19 @@ Monte Carlo Tic-Tac-Toe Player
 """
 
 import random
-#import poc_ttt_gui
-#import poc_ttt_provided as provided
-import cv_tictactoe_board as provided
 
-# Constants for Monte Carlo simulator
-# You may change the values of these constants as desired, but
-#  do not change their names.
-NTRIALS = 100         # Number of trials to run
-SCORE_CURRENT = 1.0 # Score for squares played by the current player
-SCORE_OTHER = 1.0   # Score for squares played by the other player
+from tictactoe_board import TicTacToeBoard
+
+from tictactoe_board import convert_grid_to_list
+from tictactoe_board import switch_player
+
+from tictactoe_board import EMPTY
+from tictactoe_board import PLAYERO
+from tictactoe_board import PLAYERX
+from tictactoe_board import DRAW
+
+SCORE = 1.0
     
-# Add your functions here.
 def mc_trial(board,player):
     """
     This function takes a current board and the next player to move.
@@ -28,7 +29,7 @@ def mc_trial(board,player):
         return 
     row, col = get_random_move(board)
     board.move(row, col, player)
-    mc_trial(board, provided.switch_player(player))
+    mc_trial(board, switch_player(player))
 
 def get_random_move(board):
     """
@@ -46,7 +47,7 @@ def mc_update_scores(scores,board,player):
     grid. As the function updates the scores grid directly,
     it does not return anything.
     """
-    if not board.check_win() == provided.DRAW:
+    if not board.check_win() == DRAW:
         apply_score(scores, board, player)
 
 def get_score_values(board, player):
@@ -54,9 +55,9 @@ def get_score_values(board, player):
     Return the values to score each players moves with
     """
     if player == board.check_win():
-        return SCORE_CURRENT, -SCORE_OTHER
+        return SCORE, -SCORE
     else:
-        return -SCORE_CURRENT, SCORE_OTHER    
+        return -SCORE, SCORE    
 
 def apply_score(scores, board, player):
     """
@@ -68,19 +69,19 @@ def apply_score(scores, board, player):
         """
         if board.square(row, col) == player:
             scores[row][col] += score_current
-        elif not board.square(row, col) == provided.EMPTY:
+        elif not board.square(row, col) == EMPTY:
             scores[row][col] += score_other  
     
     score_current, score_other = get_score_values(board, player)
 
-    [[update_tile_scores(row, col) for col in range(board.get_dim())] 
-    for row in range(board.get_dim())]
+    [[update_tile_scores(row, col) for col in range(board.dimension)] 
+    for row in range(board.dimension)]
             
     # for row in range(board.get_dim()):
     #     for col in range(board.get_dim()):
             # if board.square(row, col) == player:
             #     scores[row][col] += score_current
-            # elif not board.square(row, col) == provided.EMPTY:
+            # elif not board.square(row, col) == EMPTY:
             #     scores[row][col] += score_other
     
 # def update_tile_scores(board, scores, row, col, player, score_current, score_other): 
@@ -91,7 +92,7 @@ def apply_score(scores, board, player):
 #     """
 #     if board.square(row, col) == player:
 #         scores[row][col] += score_current
-#     elif not board.square(row, col) == provided.EMPTY:
+#     elif not board.square(row, col) == EMPTY:
 #         scores[row][col] += score_other   
 
 def get_best_move(board,scores):
@@ -112,26 +113,40 @@ def get_high_score(board, scores):
     """
     Generates a list of the indices high scores to choose from
     """
-    high_scores = []
-    high_index = board.get_empty_squares()[0]
-    highest_score = scores[high_index[0]][high_index[1]]
+    # high_scores = []
+    # high_index = board.get_empty_squares()[0]
+    # highest_score = scores[high_index[0]][high_index[1]]
 
-    for index in board.get_empty_squares():
-        high_scores, highest_score = update_high_scores(scores[index[0]][index[1]], index, highest_score, high_scores)
-    return high_scores    
+    # for index in board.get_empty_squares():
+    #     high_scores, highest_score = update_high_scores(scores[index[0]][index[1]], index, highest_score, high_scores)
     
-def update_high_scores(score, index, highest_score, high_scores):
-    """
-    Checks to see if the current tile is a high score for the remaining open
-    tiles and returns it if it is or returns the list of high scores
-    if it is not a new high score
-    """
-    if score == highest_score:
-        return high_scores + [index], highest_score
-    elif score > highest_score:
-        highest_score = score
-        return [index], highest_score
-    return high_scores, highest_score
+    # get_max_score(board, scores)
+    # print highest_score
+    # print high_scores
+
+    return get_max_score(board, scores)
+
+def get_max_score(board, scores):
+    available_scores_and_indices = [(scores[index[0]][index[1]], index) for index in board.get_empty_squares()]
+    available_scores = [scores[index[0]][index[1]] for index in board.get_empty_squares()]
+    #available_indices = [index for index in board.get_empty_squares()]
+    max_score = max(available_scores)
+    #highest_scoring_open_tiles = [index for index in board.get_empty_squares() if scores[index[0]][index[1]] == max_score]
+    highest_scoring_open_tiles2 = [element[1] for element in available_scores_and_indices if element[0] == max_score]
+    return highest_scoring_open_tiles2   
+    
+# def update_high_scores(score, index, highest_score, high_scores):
+#     """
+#     Checks to see if the current tile is a high score for the remaining open
+#     tiles and returns it if it is or returns the list of high scores
+#     if it is not a new high score
+#     """
+#     if score == highest_score:
+#         return high_scores + [index], highest_score
+#     elif score > highest_score:
+#         highest_score = score
+#         return [index], highest_score
+#     return high_scores, highest_score
 
 
 def select_random_highest_tile(high_scores):
@@ -158,7 +173,7 @@ def run_set_of_trials(board, player, trials):
     """
     Run set number of trials on the given board
     """
-    scores = [[0 for dummy_col in range(board.get_dim())] for dummy_row in range(board.get_dim())]
+    scores = [[0 for dummy_col in range(board.dimension)] for dummy_row in range(board.dimension)]
     [score_trial(board, player, scores) for dummy_num in range(trials)]
     return scores
 

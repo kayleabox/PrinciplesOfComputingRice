@@ -17,6 +17,14 @@ def switch_player(player):
         return PLAYERX
     return PLAYERO
 
+def convert_grid_to_list(index_grid, index_list = []):
+    """
+    Convert a two dimensional array to a one dimensional array
+    """
+    for l_list in index_grid:
+        index_list += l_list
+    return index_list
+
 class TicTacToeBoard(object):
     """
     Class to represent a Tic-Tac-Toe board.
@@ -100,10 +108,7 @@ class TicTacToeBoard(object):
         """
         index_grid = [[(row, col) for col in range(self.dimension) if self.board[row][col] == EMPTY]
                       for row in range(self.dimension)]
-        index_list = []
-        for l_list in index_grid:
-            index_list += l_list
-        return index_list
+        return convert_grid_to_list(index_grid, [])
 
     def move(self, row, col, player):
         """
@@ -193,6 +198,7 @@ class TicTacToeBoard(object):
         """
         Return a copy of the board.
         """
-        return self.board[:]
+        return TicTacToeBoard(self.dimension, self._reverse, self.board)
+        #return self.board[:]
 
 
