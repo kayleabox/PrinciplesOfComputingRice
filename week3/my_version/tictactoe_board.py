@@ -7,10 +7,6 @@ EMPTY = 0
 PLAYERX = 1
 PLAYERO = 2
 DRAW = -2
-PLAYER = {
-    "playerx": 1,
-    "playero": 2
-}
 
 def switch_player(player):
     """
@@ -21,7 +17,7 @@ def switch_player(player):
         return PLAYERX
     return PLAYERO
 
-def convert_grid_to_list(index_grid, index_list = []):
+def convert_grid_to_list(index_grid, index_list=[]):
     """
     Convert a two dimensional array to a one dimensional array
     """
@@ -139,10 +135,10 @@ class TicTacToeBoard(object):
         }
         for check in game_checks:
             if game_checks[check] != []:
-              return game_checks[check][0]
-        
-        if len(self.get_empty_squares()) > 0:
-            return 
+                return game_checks[check][0]
+
+        if self.get_empty_squares() != []:
+            return
         return DRAW
 
     def column_grid(self):
@@ -188,6 +184,3 @@ class TicTacToeBoard(object):
         Return a copy of the board.
         """
         return TicTacToeBoard(self.dimension, self._reverse, self.board)
-
-
-

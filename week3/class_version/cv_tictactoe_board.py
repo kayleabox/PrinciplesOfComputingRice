@@ -7,10 +7,6 @@ EMPTY = 0
 PLAYERX = 1
 PLAYERO = 2
 DRAW = -2
-PLAYER = {
-    "playerx": 1,
-    "playero": 2
-}
 
 def switch_player(player):
     if player == PLAYERO:

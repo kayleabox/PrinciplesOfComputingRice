@@ -68,8 +68,8 @@ def apply_score(scores, board, player):
 
     score_current, score_other = get_score_values(board, player)
 
-    [[update_tile_scores(row, col) for col in range(board.dimension)]
-     for row in range(board.dimension)]
+    return [[update_tile_scores(row, col) for col in range(board.dimension)]
+            for row in range(board.dimension)]
 
     # for row in range(board.get_dim()):
     #     for col in range(board.get_dim()):

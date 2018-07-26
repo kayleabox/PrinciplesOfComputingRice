@@ -1,14 +1,11 @@
 import unittest
 
-from cv_tictactoe_board import TicTacToeBoard
-
-from cv_tictactoe_board import switch_player
-
+from cv_tictactoe_board import DRAW
 from cv_tictactoe_board import EMPTY
 from cv_tictactoe_board import PLAYERO
 from cv_tictactoe_board import PLAYERX
-from cv_tictactoe_board import DRAW
-
+from cv_tictactoe_board import switch_player
+from cv_tictactoe_board import TicTacToeBoard
 
 class SwitchPlayerTest(unittest.TestCase):
   def test(self):
