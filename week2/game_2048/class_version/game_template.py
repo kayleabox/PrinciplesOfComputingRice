@@ -5,8 +5,6 @@ import random
 
 from merge import merge
 
-#import poc_2048_gui
-
 # Directions, DO NOT MODIFY
 UP = 1
 DOWN = 2
@@ -20,7 +18,7 @@ OFFSETS = {UP: (1, 0),
            LEFT: (0, 1),
            RIGHT: (0, -1)}
 
-class TwentyFortyEight:
+class TwentyFortyEight(object):
     """
     Class to run the game logic.
     """
@@ -31,17 +29,19 @@ class TwentyFortyEight:
         self._grid = self.generate_empty_grid()
         self._move_grid_indices = self.generate_move_grid_indices()
 
-    def set_move_grid_indices(self, move_dict):
-        """
-        Set the value of move_grid_indices
-        """
-        self._move_grid_indices = move_dict
-
-    def get_move_grid_indices(self):
+    @property
+    def move_grid_indices(self):
         """
         Get move_grid_indices
         """
         return self._move_grid_indices
+
+    @move_grid_indices.setter
+    def move_grid_indices(self, move_dict):
+        """
+        Set the value of move_grid_indices
+        """
+        self._move_grid_indices = move_dict
 
     def generate_move_grid_indices(self):
         """
@@ -49,41 +49,53 @@ class TwentyFortyEight:
         in the grid
         """
         return {
-            UP: [(0, index) for index in range(self.get_grid_width())],
-            DOWN: [(self.get_grid_height() - 1, index) for index in range(self.get_grid_width())],
-            RIGHT: [(index, self.get_grid_width() - 1) for index in range(self.get_grid_height())],
-            LEFT: [(index, 0) for index in range(self.get_grid_height())]
+            UP: [(0, index) for index in range(self.grid_width)],
+            DOWN: [(self.grid_height - 1, index) for index in range(self.grid_width)],
+            RIGHT: [(index, self.grid_width - 1) for index in range(self.grid_height)],
+            LEFT: [(index, 0) for index in range(self.grid_height)]
         }
 
-    def get_grid_height(self):
+    @property
+    def direction(self):
+        """
+        Returns the direction of the move
+        """
+        return self._direction
+    
+    @direction.setter
+    def direction(self, value):
+        """
+        Sets the direction of the move
+        """
+        self._direction = value
+
+    @property
+    def grid_height(self):
         """
         Get the height of the board.
         """
         return self._grid_height
 
-    def get_grid_width(self):
+    @property
+    def grid_width(self):
         """
         Get the width of the board.
         """
         return self._grid_width
 
-    def get_grid(self):
+    @property
+    def grid(self):
         """
         Get the grid.
         """
         return self._grid
 
-    def set_grid(self, grid):
+    @grid.setter
+    def grid(self, grid):
         """
         Set the value of the game grid.
         """
         self._grid = grid
-
-    def set_tile(self, row, col, value):
-        """
-        Set the tile at position row, col to have the given value.
-        """
-        self._grid[row][col] = value
 
     def get_tile(self, row, col):
         """
@@ -91,6 +103,12 @@ class TwentyFortyEight:
         """
         return self._grid[row][col]
 
+    def set_tile(self, row, col, value):
+        """
+        Set the tile at position row, col to have the given value.
+        """
+        self._grid[row][col] = value
+        
     def reset(self):
         """
         Reset the game so the grid is empty except for two
@@ -111,31 +129,19 @@ class TwentyFortyEight:
         """
         Return a string representation of the grid for debugging.
         """
-        return str(self.get_grid()).replace('],', '],\n')
-
-    def set_direction(self, value):
-        """
-        Sets the direction of the move
-        """
-        self._direction = value
-
-    def get_direction(self):
-        """
-        Returns the direction of the move
-        """
-        return self._direction
+        return str(self.grid).replace('],', '],\n')
 
     def move(self, direction):
         """
         Move all tiles in the given direction and add
         a new tile if any tiles moved.
         """
-        self.set_direction(direction)
+        self.direction = direction
 
         if direction in (UP, DOWN):
-            self.move_tiles(self.get_grid_height())
+            self.move_tiles(self.grid_height)
         else:
-            self.move_tiles(self.get_grid_width())
+            self.move_tiles(self.grid_width)
 
     def move_tiles(self, height_width):
         """
@@ -146,7 +152,7 @@ class TwentyFortyEight:
         #if self.get_grid() != new_grid:
         #    self.set_grid(new_grid)
         #    self.new_tile()
-        self.set_grid(new_grid)
+        self.grid = new_grid
 
     def add_merged_to_grid(self, row, new_grid):
         """
@@ -161,7 +167,7 @@ class TwentyFortyEight:
         Generates a grid of the indices
         """
         return [self.add_to_indices_grid(index, height_width)
-                for index in self.get_move_grid_indices()[self.get_direction()]]
+                for index in self.move_grid_indices[self.direction]]
 
     def add_to_indices_grid(self, index, height_width):
         """
@@ -182,8 +188,8 @@ class TwentyFortyEight:
         grid of indices
         """
         for dummy_number in range(height_width - 1):
-            index0 += OFFSETS[self.get_direction()][0]
-            index1 += OFFSETS[self.get_direction()][1]
+            index0 += OFFSETS[self.direction][0]
+            index1 += OFFSETS[self.direction][1]
             yield index0, index1
 
     def new_tile(self):
@@ -223,14 +229,10 @@ class TwentyFortyEight:
         """
         Returns a random index between 0 and get_grid_height
         """
-        return random.randint(0, self.get_grid_height() - 1)
+        return random.randint(0, self.grid_height - 1)
 
     def get_random_col_index(self):
         """
         Returns a random index between 0 and get_grid_width
         """
-        return  random.randint(0, self.get_grid_width() - 1)
-
-
-
-#poc_2048_gui.run_gui(TwentyFortyEight(4, 4))
+        return  random.randint(0, self.grid_width - 1)

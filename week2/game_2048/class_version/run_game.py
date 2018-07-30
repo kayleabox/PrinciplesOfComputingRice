@@ -7,7 +7,6 @@ game.new_tile()
 game.new_tile()
 print game.__str__()
 game.move(2)
-#print game.get_grid()
 print game.__str__()
 
 print "UP"
@@ -18,7 +17,6 @@ game.new_tile()
 print game.__str__()
 print "\n"
 game.move(1)
-#print game.get_grid()
 print game.__str__()
 
 print "RIGHT"
@@ -29,7 +27,6 @@ game.new_tile()
 print game.__str__()
 print "\n"
 game.move(4)
-#print game.get_grid()
 print game.__str__()
 
 print "LEFT"
@@ -40,5 +37,4 @@ game.new_tile()
 print game.__str__()
 print "\n"
 game.move(3)
-#print game.get_grid()
 print game.__str__()
