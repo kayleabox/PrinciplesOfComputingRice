@@ -12,17 +12,12 @@ from tictactoe_board import TicTacToeBoard
 class TrialTest(unittest.TestCase):
     def test(self):
         board = TicTacToeBoard(3, False, None)
-        #original_state = board.board[:]
-        #original_state = list(board.board)
-        #original_state = [row for row in board.board]
         original_state = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+
         self.assertEqual(board.board, original_state)
 
-        #these have different ids for all of the cases
-        # :( I don't understand why original_state is changing
-        #print id(original_state)
-        #print id(board.board)
         mc_trial(board, PLAYERX)
+        
         self.assertNotEqual(board.board, original_state)
         self.assertNotEqual(board.check_win(), None)
 
