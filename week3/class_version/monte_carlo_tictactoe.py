@@ -16,7 +16,7 @@ SCORE_CURRENT = 1.0 # Score for squares played by the current player
 SCORE_OTHER = 1.0   # Score for squares played by the other player
     
 # Add your functions here.
-def mc_trial(board,player):
+def mc_trial(board, player):
     """
     This function takes a current board and the next player to move.
     The function should play a game starting with the given player
@@ -38,7 +38,7 @@ def get_random_move(board):
     random_square = random.randint(0, len(board.get_empty_squares())) - 1
     return board.get_empty_squares()[random_square] 
     
-def mc_update_scores(scores,board,player):
+def mc_update_scores(scores, board, player):
     """
     This function takes a grid of scores (a list of lists) with
     the same dimensions as the Tic-Tac-Toe board, a board from a
@@ -95,7 +95,7 @@ def apply_score(scores, board, player):
 #     elif not board.square(row, col) == provided.EMPTY:
 #         scores[row][col] += score_other   
 
-def get_best_move(board,scores):
+def get_best_move(board, scores):
     """
     This function takes a current board and a grid of scores.
     The function should find all of the empty squares with the
@@ -144,7 +144,7 @@ def select_random_highest_tile(high_scores):
     row, column = high_scores[random_square]
     return (row, column)
 
-def mc_move(board,player,trials):
+def mc_move(board, player, trials):
     """
     This function takes a current board, which player the machine
     player is, and the number of trials to run. The function
