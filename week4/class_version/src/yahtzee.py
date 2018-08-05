@@ -3,12 +3,6 @@ Planner for Yahtzee
 Simplifications:  only allow discard and roll, only score against upper level
 """
 
-from copy import copy
-
-# Used to increase the timeout, if necessary
-#import codeskulptor
-#codeskulptor.set_timeout(20)
-
 def score(hand):
     """
     Compute the maximal score for a Yahtzee hand according to the
@@ -18,8 +12,7 @@ def score(hand):
 
     Returns an integer score
     """
-    possible_scores = [hand.count(number) * number for number in hand]
-    return max(possible_scores)
+    return max([hand.count(number) * number for number in hand])
 
 
 def expected_value(held_dice, num_die_sides, num_free_dice):
@@ -33,8 +26,8 @@ def expected_value(held_dice, num_die_sides, num_free_dice):
 
     Returns a floating point expected value
     """
-    dice = [number for number in range(1, num_die_sides+1)]
-    all_rolls = list(gen_all_sequences(dice, num_free_dice))
+    dice_sides = [number for number in range(1, num_die_sides+1)]
+    all_rolls = list(gen_all_sequences(dice_sides, num_free_dice))
     return round(sum([score(held_dice + roll) for roll in all_rolls])/float(len(all_rolls)), 11)
 
 def gen_all_holds(hand):
@@ -53,7 +46,7 @@ def recursive_gen_holds(hand, length, holds):
     Recursively generate all possible holds
     """
     if length:
-        holds = recursive_gen_holds(hand, length-1, add_partial_holds_to_temp(hand, holds))
+        return recursive_gen_holds(hand, length-1, add_partial_holds_to_temp(hand, holds))
     return holds
 
 def add_partial_holds_to_temp(hand, holds):
@@ -74,12 +67,18 @@ def add_sequence_to_holds(temp, partial_sequence, item):
     """
     Add a new sequence to the set of possible holds
     """
+    temp.add(generate_sequence(partial_sequence, item))
+    temp.add(partial_sequence)
+    return temp
+
+def generate_sequence(partial_sequence, item):
+    """
+    Add the new element onto the all_sequence
+    """
     new_sequence = list(partial_sequence)
     new_sequence.append(item)
     new_sequence.sort()
-    temp.add(tuple(new_sequence))
-    temp.add(partial_sequence)
-    return temp
+    return tuple(new_sequence)
 
 def strategy(hand, num_die_sides):
     """
@@ -93,21 +92,8 @@ def strategy(hand, num_die_sides):
     the second element is a tuple of the dice to hold
     """
     possible_holds = list(gen_all_holds(hand))
-    return max([(expected_value(hold, num_die_sides, len(hand)-len(hold)), hold) for hold in possible_holds])
-
-def run_example():
-    """
-    Compute the dice to hold and expected score for an example hand
-    """
-    num_die_sides = 6
-    hand = (1, 1, 1, 5, 6)
-    hand_score, hold = strategy(hand, num_die_sides)
-    print "Best strategy for hand", hand, "is to hold", hold, "with expected score", hand_score
-    hand = (3, 2, 3, 5, 3)
-    possible_holds = list(gen_all_holds(hand))
-    print [(expected_value(hold, 6, len(hand)-len(hold)), hold) for hold in possible_holds]
-    print [expected_value(hold, 6, len(hand)-len(hold)) for hold in possible_holds]
-    print strategy(hand, 6)
+    return max([(expected_value(hold, num_die_sides, len(hand)-len(hold)), hold)
+                for hold in possible_holds])
 
 def gen_all_sequences(outcomes, length):
     """
@@ -124,7 +110,8 @@ def update_partial_sequences(all_sequences, outcomes):
     Iterate through the partial sequences in the list and return the updated version
     """
     temp_set = set()
-    return set([add_outcome_to_tempset(temp_set, sequence, outcomes) for sequence in all_sequences][0])
+    return set([add_outcome_to_tempset(temp_set, sequence, outcomes)
+                for sequence in all_sequences][0])
 
 def add_outcome_to_tempset(new_set, sequence, outcomes):
     """
@@ -146,9 +133,21 @@ def update_set(new_set, sequence, item):
     new_set.add(tuple(temp_sequence))
     return new_set
 
-run_example()
+def run_example():
+    """
+    Compute the dice to hold and expected score for an example hand
+    """
+    num_die_sides = 6
+    hand = (1, 1, 1, 5, 6)
+    hand_score, hold = strategy(hand, num_die_sides)
+    print "Best strategy for hand", hand, "is to hold", hold, "with expected score", hand_score
+    hand = (3, 2, 3, 5, 3)
+    possible_holds = list(gen_all_holds(hand))
+    print [(expected_value(hold, 6, len(hand)-len(hold)), hold) for hold in possible_holds]
+    print strategy(hand, 6)
+    print gen_all_holds([0, 2, 2, 3, 3])
+    print gen_all_sequences([0, 2, 3, 8], 3)
+    gen_seq = list(gen_all_sequences([1, 2, 3, 4, 5, 6], 3))
+    print sum([score((2, 2) + roll) for roll in gen_seq])/float(len(gen_seq))
 
-print gen_all_holds([0, 2, 2, 3, 3])
-print gen_all_sequences([0, 2, 3, 8], 3)
-gen_seq = list(gen_all_sequences([1, 2, 3, 4, 5, 6], 3))
-print sum([score((2, 2) + roll) for roll in gen_seq])/float(len(gen_seq))
+run_example()
