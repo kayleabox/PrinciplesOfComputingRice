@@ -1,6 +1,7 @@
 import unittest
 
 from tictactoe_board import (DRAW, EMPTY, PLAYERO, PLAYERX,
+                             evaluate_diagonal_win, evaluate_grid_win,
                              switch_player, TicTacToeBoard)
 
 class SwitchPlayerTest(unittest.TestCase):
@@ -113,8 +114,8 @@ class TicTacToeBoardCheckGridTest(unittest.TestCase):
         column_grid = tictactoe_board.column_grid()
         row_grid = tictactoe_board.board
 
-        self.assertEqual(tictactoe_board.evaluate_grid_win(column_grid), [])
-        self.assertEqual(tictactoe_board.evaluate_grid_win(row_grid), [])
+        self.assertEqual(evaluate_grid_win(column_grid), [])
+        self.assertEqual(evaluate_grid_win(row_grid), [])
 
         tictactoe_board.board[1][1] = 1
         tictactoe_board.board[2][1] = 1
@@ -124,14 +125,14 @@ class TicTacToeBoardCheckGridTest(unittest.TestCase):
 
         column_grid = tictactoe_board.column_grid()
 
-        self.assertEqual(tictactoe_board.evaluate_grid_win(column_grid), [PLAYERX])
+        self.assertEqual(evaluate_grid_win(column_grid), [PLAYERX])
 
         tictactoe_board.board[2][1] = 2
         tictactoe_board.board[2][0] = 2
 
         row_grid = tictactoe_board.board
 
-        self.assertEqual(tictactoe_board.evaluate_grid_win(row_grid), [PLAYERO])
+        self.assertEqual(evaluate_grid_win(row_grid), [PLAYERO])
 
 class TicTacToeBoardCheckDiagonalTest(unittest.TestCase):
     def test(self):
@@ -143,8 +144,8 @@ class TicTacToeBoardCheckDiagonalTest(unittest.TestCase):
         uleft_bright = tictactoe_board.uleft_bright_diagonal()
         bleft_uright = tictactoe_board.bleft_uright_diagonal()
 
-        self.assertEqual(tictactoe_board.evaluate_diagonal_win(uleft_bright), [])
-        self.assertEqual(tictactoe_board.evaluate_diagonal_win(bleft_uright), [])
+        self.assertEqual(evaluate_diagonal_win(uleft_bright), [])
+        self.assertEqual(evaluate_diagonal_win(bleft_uright), [])
 
         tictactoe_board.board[1][1] = 1
         tictactoe_board.board[2][1] = 1
@@ -153,7 +154,7 @@ class TicTacToeBoardCheckDiagonalTest(unittest.TestCase):
 
         uleft_bright = tictactoe_board.uleft_bright_diagonal()
 
-        self.assertEqual(tictactoe_board.evaluate_diagonal_win(uleft_bright), [PLAYERX])
+        self.assertEqual(evaluate_diagonal_win(uleft_bright), [PLAYERX])
 
         tictactoe_board.board[2][1] = 2
         tictactoe_board.board[3][0] = 2
@@ -161,7 +162,7 @@ class TicTacToeBoardCheckDiagonalTest(unittest.TestCase):
 
         bleft_uright = tictactoe_board.bleft_uright_diagonal()
 
-        self.assertEqual(tictactoe_board.evaluate_diagonal_win(bleft_uright), [PLAYERO])
+        self.assertEqual(evaluate_diagonal_win(bleft_uright), [PLAYERO])
 
 class TicTacToeBoardCheckWinTest(unittest.TestCase):
     def test_empty_board(self):

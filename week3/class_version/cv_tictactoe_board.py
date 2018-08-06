@@ -11,6 +11,10 @@ PLAYERO = 2
 DRAW = -2
 
 def switch_player(player):
+    """
+    Switch the current value of player to PLAYERX if it is PLAYERO
+    or PLAYERO if it is currently PLAYERX
+    """
     return PLAYERX if player == PLAYERO else PLAYERO
 
 class TicTacToeBoard(object):
@@ -60,7 +64,7 @@ class TicTacToeBoard(object):
 
     def get_dim(self):
         """
-        Method used for class version of monte carlo tictactoe to 
+        Method used for class version of monte carlo tictactoe to
         get the dimension of the board
         """
         return self.dimension
@@ -91,7 +95,7 @@ class TicTacToeBoard(object):
         Returns one of the three constants EMPTY, PLAYERX, or PLAYERO
         that correspond to the contents of the board at position (row, col).
         """
-        return self.board[row][col] 
+        return self.board[row][col]
 
     def get_empty_squares(self):
         """
@@ -132,9 +136,9 @@ class TicTacToeBoard(object):
         }
         for move in winning_moves:
             if winning_moves[move] != []:
-              return winning_moves[move][0]
-        
-        if len(self.get_empty_squares()) > 0:
+                return winning_moves[move][0]
+
+        if self.get_empty_squares() != []:
             return None
         return DRAW
 
@@ -181,5 +185,3 @@ class TicTacToeBoard(object):
         Return a copy of the board.
         """
         return TicTacToeBoard(self.dimension, self._reverse, self.board)
-
-

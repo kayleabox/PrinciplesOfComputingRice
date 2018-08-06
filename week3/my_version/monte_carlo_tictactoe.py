@@ -21,7 +21,7 @@ def mc_trial(board, player):
         return None
     row, col = get_random_move(board)
     board.move(row, col, player)
-    mc_trial(board, switch_player(player))
+    return mc_trial(board, switch_player(player))
 
 def get_random_move(board):
     """
@@ -116,7 +116,8 @@ def run_set_of_trials(board, player, trials):
     Run set number of trials on the given board
     """
     scores = [[0 for dummy_col in range(board.dimension)] for dummy_row in range(board.dimension)]
-    [score_trial(board, player, scores) for dummy_num in range(trials)]
+    for dummy_num in range(trials):
+        score_trial(board, player, scores)
     return scores
 
 def score_trial(board, player, scores):

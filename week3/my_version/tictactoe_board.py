@@ -23,6 +23,23 @@ def convert_grid_to_list(index_grid):
     """
     return list(chain(*index_grid))
 
+def evaluate_grid_win(grid):
+    """
+    Returns an array with winning player in it if there is a winner
+    or an empty array if there was not a winner
+    """
+    return [col[0] for col in grid
+            if len(set(col)) == 1 and set(col) != set([EMPTY])]
+
+def evaluate_diagonal_win(row):
+    """
+    Returns the player that won if there was a winner
+    or None if there was not a winner
+    """
+    if len(set(row)) == 1 and set(row) != set([EMPTY]):
+        return [row[0]]
+    return []
+
 
 class TicTacToeBoard(object):
     """
@@ -123,17 +140,17 @@ class TicTacToeBoard(object):
         If game is in progress, returns None.
         """
         winning_moves = {
-            "rows": self.evaluate_grid_win(self.board),
-            "columns": self.evaluate_grid_win(self.column_grid()),
-            "uleft_diagonal": self.evaluate_diagonal_win(self.uleft_bright_diagonal()),
-            "bleft_diagonal": self.evaluate_diagonal_win(self.bleft_uright_diagonal())
+            "rows": evaluate_grid_win(self.board),
+            "columns": evaluate_grid_win(self.column_grid()),
+            "uleft_diagonal": evaluate_diagonal_win(self.uleft_bright_diagonal()),
+            "bleft_diagonal": evaluate_diagonal_win(self.bleft_uright_diagonal())
         }
         for move in winning_moves:
             if winning_moves[move] != []:
                 return winning_moves[move][0]
 
         if self.get_empty_squares() != []:
-            return
+            return None
         return DRAW
 
     def column_grid(self):
@@ -142,23 +159,6 @@ class TicTacToeBoard(object):
         """
         return [[self.board[col][row] for col in range(self.dimension)]
                 for row in range(self.dimension)]
-
-    def evaluate_grid_win(self, grid):
-        """
-        Returns an array with winning player in it if there is a winner
-        or an empty array if there was not a winner
-        """
-        return [col[0] for col in grid
-                if len(set(col)) == 1 and set(col) != set([EMPTY])]
-
-    def evaluate_diagonal_win(self, row):
-        """
-        Returns the player that won if there was a winner
-        or None if there was not a winner
-        """
-        if len(set(row)) == 1 and set(row) != set([EMPTY]):
-            return [row[0]]
-        return []
 
     def uleft_bright_diagonal(self):
         """
