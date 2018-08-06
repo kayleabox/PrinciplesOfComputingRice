@@ -26,7 +26,7 @@ def expected_value(held_dice, num_die_sides, num_free_dice):
 
     Returns a floating point expected value
     """
-    dice_sides = [number for number in range(1, num_die_sides+1)]
+    dice_sides = range(1, num_die_sides+1)
     all_rolls = list(gen_all_sequences(dice_sides, num_free_dice))
     return round(sum([score(held_dice + roll) for roll in all_rolls])/float(len(all_rolls)), 11)
 
@@ -45,8 +45,8 @@ def recursive_gen_holds(hand, length, holds):
     """
     Recursively generate all possible holds
     """
-    return recursive_gen_holds(hand, length-1, 
-        add_partial_holds_to_temp(hand, holds)) if length else holds
+    return recursive_gen_holds(hand, length-1,
+                               add_partial_holds_to_temp(hand, holds)) if length else holds
 
 def add_partial_holds_to_temp(hand, holds):
     """
@@ -57,7 +57,7 @@ def add_partial_holds_to_temp(hand, holds):
 
 def create_new_partial_hold(temp, partial_sequence, hand):
     """
-    Create new partial hold
+    Start building a new hold
     """
     return [add_sequence_to_holds(temp, partial_sequence, item) for item in hand
             if hand.count(item) > partial_sequence.count(item)][0]
@@ -72,7 +72,7 @@ def add_sequence_to_holds(temp, partial_sequence, item):
 
 def generate_sequence(partial_sequence, item):
     """
-    Add the new element onto the all_sequence
+    Add the new element onto the new_sequence
     """
     new_sequence = list(partial_sequence)
     new_sequence.append(item)
@@ -140,13 +140,5 @@ def run_example():
     hand = (1, 1, 1, 5, 6)
     hand_score, hold = strategy(hand, num_die_sides)
     print "Best strategy for hand", hand, "is to hold", hold, "with expected score", hand_score
-    hand = (3, 2, 3, 5, 3)
-    possible_holds = list(gen_all_holds(hand))
-    print [(expected_value(hold, 6, len(hand)-len(hold)), hold) for hold in possible_holds]
-    print strategy(hand, 6)
-    print gen_all_holds([0, 2, 2, 3, 3])
-    print gen_all_sequences([0, 2, 3, 8], 3)
-    gen_seq = list(gen_all_sequences([1, 2, 3, 4, 5, 6], 3))
-    print sum([score((2, 2) + roll) for roll in gen_seq])/float(len(gen_seq))
 
 run_example()
