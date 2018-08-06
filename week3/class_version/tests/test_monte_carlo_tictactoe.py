@@ -1,32 +1,18 @@
 import unittest
 
-from cv_tictactoe_board import switch_player
-
-from cv_tictactoe_board import TicTacToeBoard
-
-from cv_tictactoe_board import PLAYERO
-from cv_tictactoe_board import PLAYERX
-
-from monte_carlo_tictactoe import mc_move
-from monte_carlo_tictactoe import mc_trial
-from monte_carlo_tictactoe import mc_update_scores
-from monte_carlo_tictactoe import get_best_move
-from monte_carlo_tictactoe import get_score_values
+from cv_tictactoe_board import (PLAYERO, PLAYERX, switch_player, TicTacToeBoard)
+from monte_carlo_tictactoe import (get_best_move, get_score_values,
+                                   mc_move, mc_trial, mc_update_scores)
 
 class TrialTest(unittest.TestCase):
   def test(self):
     board = TicTacToeBoard(3, False, None)
-    #original_state = board.board[:]
-    #original_state = list(board.board)
-    #original_state = [row for row in board.board]
     original_state = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
     self.assertEqual(board.board, original_state)
 
-    #print id(original_state) #these have different ids for all of the cases :( I don't understand why original_state is changing
-    #print id(board.board)
     mc_trial(board, PLAYERX)
     self.assertNotEqual(board.board, original_state)
-    self.assertNotEqual(board.check_win(), None)
+    self.assertNotEqual(board.evaluate_win_status(), None)
 
 class UpdateScoresTest(unittest.TestCase):
   def test(self):

@@ -1,13 +1,8 @@
 import unittest
 
-from monte_carlo_tictactoe import get_best_move
-from monte_carlo_tictactoe import get_score_values
-from monte_carlo_tictactoe import mc_move
-from monte_carlo_tictactoe import mc_trial
-from monte_carlo_tictactoe import mc_update_scores
-from tictactoe_board import PLAYERO
-from tictactoe_board import PLAYERX
-from tictactoe_board import TicTacToeBoard
+from monte_carlo_tictactoe import (get_best_move, get_score_values, 
+                                   mc_move, mc_trial, mc_update_scores)
+from tictactoe_board import (PLAYERO, PLAYERX, TicTacToeBoard)
 
 class TrialTest(unittest.TestCase):
     def test(self):
@@ -19,7 +14,7 @@ class TrialTest(unittest.TestCase):
         mc_trial(board, PLAYERX)
         
         self.assertNotEqual(board.board, original_state)
-        self.assertNotEqual(board.check_win(), None)
+        self.assertNotEqual(board.evaluate_win_status(), None)
 
 class UpdateScoresTest(unittest.TestCase):
     def test_update_scores_win_diagonal(self):

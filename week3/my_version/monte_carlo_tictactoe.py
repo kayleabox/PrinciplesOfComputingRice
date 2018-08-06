@@ -4,10 +4,7 @@ Monte Carlo Tic-Tac-Toe Player
 
 import random
 
-from tictactoe_board import DRAW
-from tictactoe_board import EMPTY
-from tictactoe_board import switch_player
-
+from tictactoe_board import (DRAW, EMPTY, switch_player)
 
 SCORE = 1.0
 
@@ -20,8 +17,8 @@ def mc_trial(board, player):
     contain the state of the game, so the function does not return
     anything. In other words, the function should modify the board input.
     """
-    if board.check_win():
-        return
+    if board.evaluate_win_status():
+        return None
     row, col = get_random_move(board)
     board.move(row, col, player)
     mc_trial(board, switch_player(player))
@@ -42,14 +39,14 @@ def mc_update_scores(scores, board, player):
     grid. As the function updates the scores grid directly,
     it does not return anything.
     """
-    if not board.check_win() == DRAW:
+    if board.evaluate_win_status() != DRAW:
         apply_score(scores, board, player)
 
 def get_score_values(board, player):
     """
     Return the values to score each players moves with
     """
-    if player == board.check_win():
+    if player == board.evaluate_win_status():
         return SCORE, -SCORE
     return -SCORE, SCORE
 
@@ -63,31 +60,13 @@ def apply_score(scores, board, player):
         """
         if board.square(row, col) == player:
             scores[row][col] += score_current
-        elif not board.square(row, col) == EMPTY:
+        elif board.square(row, col) != EMPTY:
             scores[row][col] += score_other
 
     score_current, score_other = get_score_values(board, player)
 
     return [[update_tile_scores(row, col) for col in range(board.dimension)]
             for row in range(board.dimension)]
-
-    # for row in range(board.get_dim()):
-    #     for col in range(board.get_dim()):
-            # if board.square(row, col) == player:
-            #     scores[row][col] += score_current
-            # elif not board.square(row, col) == EMPTY:
-            #     scores[row][col] += score_other
-
-# def update_tile_scores(board, scores, row, col, player, score_current, score_other):
-#     #I don't like that I am passing in soooo many parameters
-#     #I will keep working on a refactor
-#     """
-#     Update an individual tile in the scores board
-#     """
-#     if board.square(row, col) == player:
-#         scores[row][col] += score_current
-#     elif not board.square(row, col) == EMPTY:
-#         scores[row][col] += score_other
 
 def get_best_move(board, scores):
     """

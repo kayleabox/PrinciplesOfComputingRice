@@ -3,15 +3,15 @@ Module sets up the TicTacToeBoard class that can be used
 to play tictactoe
 """
 
+from itertools import chain
+
 EMPTY = 0
 PLAYERX = 1
 PLAYERO = 2
 DRAW = -2
 
 def switch_player(player):
-    if player == PLAYERO:
-        return PLAYERX
-    return PLAYERO
+    return PLAYERX if player == PLAYERO else PLAYERO
 
 class TicTacToeBoard(object):
     """
@@ -91,11 +91,7 @@ class TicTacToeBoard(object):
         Returns one of the three constants EMPTY, PLAYERX, or PLAYERO
         that correspond to the contents of the board at position (row, col).
         """
-        if self.board[row][col] == 1:
-            return PLAYERX
-        elif self.board[row][col] == 2:
-            return PLAYERO
-        return EMPTY
+        return self.board[row][col] 
 
     def get_empty_squares(self):
         """
@@ -103,15 +99,13 @@ class TicTacToeBoard(object):
         """
         index_grid = [[(row, col) for col in range(self.dimension) if self.board[row][col] == EMPTY]
                       for row in range(self.dimension)]
-        return self.convert_grid_to_list(index_grid, [])
+        return self.convert_grid_to_list(index_grid)
 
-    def convert_grid_to_list(self, index_grid, index_list = []):
+    def convert_grid_to_list(self, index_grid):
         """
         Convert a two dimensional array to a one dimensional array
         """
-        for l_list in index_grid:
-            index_list += l_list
-        return index_list
+        return list(chain(*index_grid))
 
     def move(self, row, col, player):
         """
@@ -122,7 +116,7 @@ class TicTacToeBoard(object):
         if self.board[row][col] == EMPTY:
             self.board[row][col] = player
 
-    def check_win(self):
+    def evaluate_win_status(self):
         """
         Returns a constant associated with the state of the game
         If PLAYERX wins, returns PLAYERX.
@@ -130,18 +124,18 @@ class TicTacToeBoard(object):
         If game is drawn, returns DRAW.
         If game is in progress, returns None.
         """
-        game_checks = {
-            "rows": self.check_grid(self.board),
-            "columns": self.check_grid(self.column_grid()),
-            "uleft_diagonal": self.check_diagonal(self.uleft_bright()),
-            "bleft_diagonal": self.check_diagonal(self.bleft_uright())
+        winning_moves = {
+            "rows": self.evaluate_grid_win(self.board),
+            "columns": self.evaluate_grid_win(self.column_grid()),
+            "uleft_diagonal": self.evaluate_diagonal_win(self.uleft_bright()),
+            "bleft_diagonal": self.evaluate_diagonal_win(self.bleft_uright())
         }
-        for check in game_checks:
-            if game_checks[check] != []:
-              return game_checks[check][0]
+        for move in winning_moves:
+            if winning_moves[move] != []:
+              return winning_moves[move][0]
         
         if len(self.get_empty_squares()) > 0:
-            return 
+            return None
         return DRAW
 
     def column_grid(self):
@@ -151,35 +145,20 @@ class TicTacToeBoard(object):
         return [[self.board[col][row] for col in range(self.dimension)]
                 for row in range(self.dimension)]
 
-
-    # def check_rows(self):
-    #     """
-    #     Checks to see if there is a winning row
-    #     """
-    #     return [row[0] for row in self.board
-    #             if len(set(row)) == 1 and set(row) != set([EMPTY])]
-
-    # def check_columns(self):
-    #       """
-    #     Checks to see if there is a winning column
-    #     """
-    #     return [col[0] for col in self.column_grid()
-    #             if len(set(col)) == 1 and not set(col) == set([EMPTY])]
-
-    def check_grid(self, grid):
+    def evaluate_grid_win(self, grid):
         """
         Returns an array with winning player in it if there is a winner
         or an empty array if there was not a winner
         """
         return [col[0] for col in grid
-                if len(set(col)) == 1 and not set(col) == set([EMPTY])]
+                if len(set(col)) == 1 and set(col) != set([EMPTY])]
 
-    def check_diagonal(self, row):
+    def evaluate_diagonal_win(self, row):
         """
         Returns the player that won if there was a winner
         or None if there was not a winner
         """
-        if len(set(row)) == 1 and not set(row) == set([EMPTY]):
+        if len(set(row)) == 1 and set(row) != set([EMPTY]):
             return [row[0]]
         return []
 
@@ -202,6 +181,5 @@ class TicTacToeBoard(object):
         Return a copy of the board.
         """
         return TicTacToeBoard(self.dimension, self._reverse, self.board)
-        #return self.board[:]
 
 

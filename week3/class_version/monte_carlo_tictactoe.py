@@ -4,8 +4,6 @@ Monte Carlo Tic-Tac-Toe Player
 
 import random
 
-#import poc_ttt_gui
-#import poc_ttt_provided as provided
 import cv_tictactoe_board as provided
 
 # Constants for Monte Carlo simulator
@@ -25,8 +23,8 @@ def mc_trial(board, player):
     contain the state of the game, so the function does not return
     anything. In other words, the function should modify the board input.
     """
-    if board.check_win():
-        return 
+    if board.evaluate_win_status():
+        return None
     row, col = get_random_move(board)
     board.move(row, col, player)
     mc_trial(board, provided.switch_player(player))
@@ -47,14 +45,14 @@ def mc_update_scores(scores, board, player):
     grid. As the function updates the scores grid directly,
     it does not return anything.
     """
-    if not board.check_win() == provided.DRAW:
+    if board.evaluate_win_status() != provided.DRAW:
         apply_score(scores, board, player)
 
 def get_score_values(board, player):
     """
     Return the values to score each players moves with
     """
-    if player == board.check_win():
+    if player == board.evaluate_win_status():
         return SCORE_CURRENT, -SCORE_OTHER
     else:
         return -SCORE_CURRENT, SCORE_OTHER    
@@ -69,31 +67,13 @@ def apply_score(scores, board, player):
         """
         if board.square(row, col) == player:
             scores[row][col] += score_current
-        elif not board.square(row, col) == provided.EMPTY:
+        elif board.square(row, col) != provided.EMPTY:
             scores[row][col] += score_other  
     
     score_current, score_other = get_score_values(board, player)
 
     [[update_tile_scores(row, col) for col in range(board.get_dim())] 
-    for row in range(board.get_dim())]
-            
-    # for row in range(board.get_dim()):
-    #     for col in range(board.get_dim()):
-            # if board.square(row, col) == player:
-            #     scores[row][col] += score_current
-            # elif not board.square(row, col) == provided.EMPTY:
-            #     scores[row][col] += score_other
-    
-# def update_tile_scores(board, scores, row, col, player, score_current, score_other): 
-#     #I don't like that I am passing in soooo many parameters
-#     #I will keep working on a refactor
-#     """
-#     Update an individual tile in the scores board
-#     """
-#     if board.square(row, col) == player:
-#         scores[row][col] += score_current
-#     elif not board.square(row, col) == provided.EMPTY:
-#         scores[row][col] += score_other   
+    for row in range(board.get_dim())]  
 
 def get_best_move(board, scores):
     """
@@ -118,7 +98,7 @@ def get_high_score(board, scores):
     highest_score = scores[high_index[0]][high_index[1]]
 
     for index in board.get_empty_squares():
-        high_scores, highest_score = update_high_scores(scores[index[0]][index[1]], index, highest_score, high_scores)
+        high_scores, highest_score = update_high_scores(scores, index, highest_score, high_scores)
     return high_scores    
     
 def update_high_scores(score, index, highest_score, high_scores):
@@ -127,10 +107,11 @@ def update_high_scores(score, index, highest_score, high_scores):
     tiles and returns it if it is or returns the list of high scores
     if it is not a new high score
     """
-    if score == highest_score:
+    _score = score[index[0]][index[1]]
+    if _score == highest_score:
         return high_scores + [index], highest_score
-    elif score > highest_score:
-        highest_score = score
+    elif _score > highest_score:
+        highest_score = _score
         return [index], highest_score
     return high_scores, highest_score
 
@@ -160,7 +141,8 @@ def run_set_of_trials(board, player, trials):
     Run set number of trials on the given board
     """
     scores = [[0 for dummy_col in range(board.get_dim())] for dummy_row in range(board.get_dim())]
-    [score_trial(board, player, scores) for dummy_num in range(trials)]
+    for dummy_num in range(trials):
+        score_trial(board, player, scores)
     return scores
 
 def score_trial(board, player, scores):
