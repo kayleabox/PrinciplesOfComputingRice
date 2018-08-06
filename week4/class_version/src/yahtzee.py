@@ -45,9 +45,8 @@ def recursive_gen_holds(hand, length, holds):
     """
     Recursively generate all possible holds
     """
-    if length:
-        return recursive_gen_holds(hand, length-1, add_partial_holds_to_temp(hand, holds))
-    return holds
+    return recursive_gen_holds(hand, length-1, 
+        add_partial_holds_to_temp(hand, holds)) if length else holds
 
 def add_partial_holds_to_temp(hand, holds):
     """
@@ -120,8 +119,8 @@ def add_outcome_to_tempset(new_set, sequence, outcomes):
     # might have to use this method if I need to check an empty list of outcomes being passed in
     # [update_set(new_set, sequence, item) for item in outcomes]
     # return new_set
-    return [update_set(new_set, sequence, item) for item in outcomes][0]
     # cannot pass outcomes [] if use this method
+    return [update_set(new_set, sequence, item) for item in outcomes][0]
 
 def update_set(new_set, sequence, item):
     """
