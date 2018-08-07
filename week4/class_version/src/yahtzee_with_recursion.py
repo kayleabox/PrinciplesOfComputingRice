@@ -41,11 +41,11 @@ def strategy(hand, num_die_sides):
     Returns a tuple where the first element is the expected score and
     the second element is a tuple of the dice to hold
     """
-    possible_holds = list(gen_all_holds(hand))
+    possible_holds = list(generate_all_holds(hand))
     return max([(expected_value(hold, num_die_sides, len(hand)-len(hold)), hold)
                 for hold in possible_holds])
 
-def gen_all_holds(hand):
+def generate_all_holds(hand):
     """
     Generate all possible choices of dice from hand to hold.
 
@@ -54,13 +54,13 @@ def gen_all_holds(hand):
     Returns a set of tuples, where each tuple is dice to hold
     """
     holds = set([()])
-    return recursive_gen_holds(hand, len(hand), holds)
+    return recursive_generate_holds(hand, len(hand), holds)
 
-def recursive_gen_holds(hand, length, holds):
+def recursive_generate_holds(hand, length, holds):
     """
     Recursively generate all possible holds
     """
-    return recursive_gen_holds(hand, length-1,
+    return recursive_generate_holds(hand, length-1,
                                generate_partial_holds(hand, holds)) if length else holds
 
 def generate_partial_holds(hand, holds):
@@ -68,26 +68,30 @@ def generate_partial_holds(hand, holds):
     Add a partial hold to the set of holds
     """
     temp_set = set()
-    return [update_hold(temp_set, hold, hand) for hold in holds][0]
+    return [update_holds(temp_set, hold, hand) for hold in holds][0]
 
-def update_hold(temp_set, hold, hand):
+def update_holds(temp_set, hold, hand):
     """
-    Update each hold by adding value to it 
+    Update the holds with the next value in hand
+    if it has not been added to the hold
     """
-    return [add_hold_to_set(temp_set, hold, value) for value in hand
-            if hand.count(value) > hold.count(value)][0]
+    if hand: 
+        if hand.count(hand[0]) > hold.count(hand[0]):
+            temp_set = add_sorted_hold_to_set(temp_set, hold, hand[0])
+        return update_holds(temp_set, hold, hand[1:])
+    return temp_set
 
-def add_hold_to_set(temp_set, hold, value):
+def add_sorted_hold_to_set(temp_set, hold, value):
     """
-    Add a new hold to the set of possible holds
+    Add a new sorted hold and the old hold to a temp_set
     """
-    temp_set.add(generate_sorted_sequence(hold, value))
+    temp_set.add(generate_sorted_hold(hold, value))
     temp_set.add(hold)
     return temp_set
 
-def generate_sorted_sequence(hold, value):
+def generate_sorted_hold(hold, value):
     """
-    Add value to an old hold to create a new hold
+    Add the new element to the temp_sequence
     """
     temp_sequence = list(hold) + [value]
     temp_sequence.sort()
@@ -99,34 +103,41 @@ def gen_all_sequences(outcomes, length):
     outcomes of given length.
     """
     all_sequences = set([()])
-    for dummy_number in range(length):
-        all_sequences = update_sequences(all_sequences, outcomes)
-    return all_sequences
+    return recursive_generate_sequences(outcomes, length, all_sequences)
+
+def recursive_generate_sequences(outcomes, length, sequences):
+    """
+    Recursively generate all possible holds
+    """
+    return recursive_generate_sequences(outcomes, length-1,
+                               update_sequences(sequences, outcomes)) if length else sequences
 
 def update_sequences(all_sequences, outcomes):
     """
-    Iterate through the partial sequences in the list and return the updated version
+    Iterate through the partial sequences in the list
+    and return the updated version
     """
     temp_set = set()
-    return [add_outcome_to_tempset(temp_set, sequence, outcomes)
-                for sequence in all_sequences][0]
+    return [recursive_update_set(temp_set, sequence, outcomes)
+        for sequence in all_sequences][0]
 
-def add_outcome_to_tempset(new_set, sequence, outcomes):
-    """
-    Add the updated partial to the tempset
-    """
-    # might have to use this method if I need to check an empty list of outcomes being passed in
-    # [update_set(new_set, sequence, item) for item in outcomes]
-    # return new_set
-    # cannot pass outcomes [] if use this method
-    return [update_set(new_set, sequence, value) for value in outcomes][0]
-
-def update_set(new_set, sequence, value):
+def recursive_update_set(temp_set, sequence, outcomes):
     """
     Return a new set with elements that should be in the
     seqeunce appended to it
     """
-    temp_sequence = list(sequence) + [value]
-    new_set.add(tuple(temp_sequence))
-    return new_set
+    if outcomes:
+        temp_set.add(tuple(list(sequence) + [outcomes[0]]))
+        # temp_set = add_sequence_to_set(temp_set, sequence, outcomes[0])
+        return recursive_update_set(temp_set, sequence, outcomes[1:])
+    return temp_set
+
+def add_sequence_to_set(temp_set, sequence, outcome):
+    """
+    Add a new outcome to a sequence and add the new sequence
+    to a temp_set
+    """
+    #temp_sequence = list(sequence) + [outcome]
+    temp_set.add(tuple(list(sequence) + [outcome]))
+    return temp_set
 

@@ -3,7 +3,7 @@ Tests for class version of yahtzee
 """
 import unittest
 
-from src.yahtzee import(expected_value, gen_all_holds,
+from src.yahtzee_with_recursion import(expected_value, generate_all_holds,
                     gen_all_sequences, score,
                     strategy)
 
@@ -78,16 +78,16 @@ class GenAllHandsTest(unittest.TestCase):
         """
         Tests ...
         """
-        self.assertEqual(gen_all_holds([]), set([()]))
-        self.assertEqual(gen_all_holds([1]), set([(), (1, )]))
-        self.assertEqual(gen_all_holds([1, 2]), set([(), (1, ), (2, ), (1, 2)]))
-        self.assertEqual(gen_all_holds([0, 1, 2]), set([(), (0, ), (1, ), (2, ), (0, 1), (0, 2), (1, 2), (0, 1, 2)]))
-        self.assertEqual(gen_all_holds([0, 2, 2]), set([(), (0, ), (2, ), (0, 2), (2, 2), (0, 2, 2)]))
-        self.assertEqual(gen_all_holds([0, 2, 2, 3]), set([(), (0, ), (2, ), (3, ),
+        self.assertEqual(generate_all_holds([]), set([()]))
+        self.assertEqual(generate_all_holds([1]), set([(), (1, )]))
+        self.assertEqual(generate_all_holds([1, 2]), set([(), (1, ), (2, ), (1, 2)]))
+        self.assertEqual(generate_all_holds([0, 1, 2]), set([(), (0, ), (1, ), (2, ), (0, 1), (0, 2), (1, 2), (0, 1, 2)]))
+        self.assertEqual(generate_all_holds([0, 2, 2]), set([(), (0, ), (2, ), (0, 2), (2, 2), (0, 2, 2)]))
+        self.assertEqual(generate_all_holds([0, 2, 2, 3]), set([(), (0, ), (2, ), (3, ),
                                                            (0, 2), (0, 3), (2, 2), 
                                                            (2, 3), (0, 2, 3), (0, 2, 2),
                                                            (2, 2, 3), (0, 2, 2, 3)]))
-        self.assertEqual(gen_all_holds([0, 2, 2, 3, 3]), set([(0, 3, 3), (0,), (0, 2, 3, 3),
+        self.assertEqual(generate_all_holds([0, 2, 2, 3, 3]), set([(0, 3, 3), (0,), (0, 2, 3, 3),
                                                            (2, 2, 3), (2,), (2, 2, 3, 3), 
                                                            (3,), (0, 2, 2), (0, 2, 3), (),
                                                            (2, 3), (2, 3, 3), (2, 2), 
@@ -105,7 +105,7 @@ class StrategyTest(unittest.TestCase):
         self.assertEqual(strategy((1,), 6), (3.5, ()))
 
         hand = (1, 2, 3, 4, 4)
-        possible_holds = list(gen_all_holds(hand))
+        possible_holds = list(generate_all_holds(hand))
         best_score = max([(expected_value(hold, 6, len(hand)-len(hold)), hold) for hold in possible_holds])
         scores = [expected_value(hold, 6, len(hand)-len(hold)) for hold in possible_holds]
         strat = strategy(hand, 6)
@@ -113,7 +113,7 @@ class StrategyTest(unittest.TestCase):
         self.assertTrue(strat[0] == max(scores))
 
         hand = (1, 2, 3, 5, 3)
-        possible_holds = list(gen_all_holds(hand))
+        possible_holds = list(generate_all_holds(hand))
         best_score = max([(expected_value(hold, 6, len(hand)-len(hold)), hold) for hold in possible_holds])
         scores = [expected_value(hold, 6, len(hand)-len(hold)) for hold in possible_holds]
         strat = strategy(hand, 6)
