@@ -9,7 +9,7 @@ from src.yahtzee import(expected_value, gen_all_holds,
                         generate_temp_holds, update_hold,
                         add_hold_to_set, generate_sorted_sequence,
                         update_sequences, add_outcome_to_tempset,
-                        update_set)
+                        update_set, powerset)
 
 class GenAllSequencesTest(unittest.TestCase):
     """
@@ -90,7 +90,13 @@ class GenAllHoldsTest(unittest.TestCase):
                                                            (3,), (0, 2, 2), (0, 2, 3), (),
                                                            (2, 3), (2, 3, 3), (2, 2), 
                                                            (0, 2, 2, 3), (0, 3), (0, 2, 2, 3, 3),
-                                                           (0, 2), (3, 3)]))        
+                                                           (0, 2), (3, 3)])) 
+        self.assertEqual(set(list(powerset([0, 2, 2, 3, 3]))), set([(0, 3, 3), (0,), (0, 2, 3, 3),
+                                                           (2, 2, 3), (2,), (2, 2, 3, 3), 
+                                                           (3,), (0, 2, 2), (0, 2, 3), (),
+                                                           (2, 3), (2, 3, 3), (2, 2), 
+                                                           (0, 2, 2, 3), (0, 3), (0, 2, 2, 3, 3),
+                                                           (0, 2), (3, 3)]))       
 
 class StrategyTest(unittest.TestCase):
     """

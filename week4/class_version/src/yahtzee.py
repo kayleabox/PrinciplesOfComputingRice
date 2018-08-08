@@ -3,6 +3,8 @@ Planner for Yahtzee
 Simplifications:  only allow discard and roll, only score against upper level
 """
 
+from itertools import chain, combinations
+
 def score(hand):
     """
     Compute the maximal score for a Yahtzee hand according to the
@@ -126,3 +128,6 @@ def update_set(temp_set, sequence, value):
     temp_set.add(tuple(temp_sequence))
     return temp_set
 
+def powerset(hand):
+    return chain.from_iterable(combinations(hand, number) for number in range(len(hand)+1))
+print list(powerset([1, 2, 4, 5]))

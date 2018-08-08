@@ -1,5 +1,7 @@
+from itertools import chain, combinations, combinations_with_replacement
 
 from yahtzee import strategy
+from yahtzee_itertools import strategy as yi_strategy
 from yahtzee_with_recursion import strategy as ywr_strategy
 
 def run_example(strategy, run_text):
@@ -17,4 +19,5 @@ def run_example(strategy, run_text):
     print "Best strategy for hand", hand, "is to hold", hold, "with expected score", hand_score
 
 run_example(strategy, "running yahtzee.py")
+run_example(yi_strategy, "running yahtzee_itertools.py")
 run_example(ywr_strategy, "running yahtzee_with_recursion.py")
