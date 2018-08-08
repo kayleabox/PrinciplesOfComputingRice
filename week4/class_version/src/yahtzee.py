@@ -111,22 +111,18 @@ def update_sequences(all_sequences, outcomes):
     return [add_outcome_to_tempset(temp_set, sequence, outcomes)
                 for sequence in all_sequences][0]
 
-def add_outcome_to_tempset(new_set, sequence, outcomes):
+def add_outcome_to_tempset(temp_set, sequence, outcomes):
     """
     Add the updated partial to the tempset
     """
-    # might have to use this method if I need to check an empty list of outcomes being passed in
-    # [update_set(new_set, sequence, item) for item in outcomes]
-    # return new_set
-    # cannot pass outcomes [] if use this method
-    return [update_set(new_set, sequence, value) for value in outcomes][0]
+    return [update_set(temp_set, sequence, value) for value in outcomes][0]
 
-def update_set(new_set, sequence, value):
+def update_set(temp_set, sequence, value):
     """
     Return a new set with elements that should be in the
     seqeunce appended to it
     """
     temp_sequence = list(sequence) + [value]
-    new_set.add(tuple(temp_sequence))
-    return new_set
+    temp_set.add(tuple(temp_sequence))
+    return temp_set
 

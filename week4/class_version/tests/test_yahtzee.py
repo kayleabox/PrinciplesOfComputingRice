@@ -4,8 +4,12 @@ Tests for class version of yahtzee
 import unittest
 
 from src.yahtzee import(expected_value, gen_all_holds,
-                    gen_all_sequences, score,
-                    strategy)
+                        gen_all_sequences, score,
+                        strategy, recursive_gen_holds,
+                        generate_partial_holds, update_hold,
+                        add_hold_to_set, generate_sorted_sequence,
+                        update_sequences, add_outcome_to_tempset,
+                        update_set)
 
 class GenAllSequencesTest(unittest.TestCase):
     """
@@ -70,7 +74,7 @@ class ExpectedValueTest(unittest.TestCase):
         self.assertEqual(expected_value((3, 2), 4, 3), 6.5)
         self.assertEqual(expected_value((2, 2), 6, 2), 5.83333333333)
 
-class GenAllHandsTest(unittest.TestCase):
+class GenAllHoldsTest(unittest.TestCase):
     """
     Test gen_all_hand method
     """
@@ -119,3 +123,115 @@ class StrategyTest(unittest.TestCase):
         strat = strategy(hand, 6)
         self.assertEqual(strat, best_score)
         self.assertTrue(strat[0] == max(scores))
+
+class RecursiveGenHoldsTest(unittest.TestCase):
+    """
+    Test recursive_gen_holds method
+    """
+    def test(self):
+        """
+        Basic test for recursive_gen_holds
+        """
+        holds = set([()])
+        self.assertEqual(recursive_gen_holds([1], 1, holds), set([(), (1, )]))
+        holds = set([()])
+        self.assertEqual(recursive_gen_holds([0, 1, 2], 3, holds), 
+                                              set([(), (0, ), (1, ), (2, ),
+                                                  (0, 1), (0, 2), (1, 2),
+                                                  (0, 1, 2)]))
+        holds = set([()])
+        self.assertEqual(recursive_gen_holds([0, 2, 2, 3], 4, holds),
+                                             set([(), (0, ), (2, ), (3, ),
+                                                 (0, 2), (0, 3), (2, 2), 
+                                                 (2, 3), (0, 2, 3), (0, 2, 2),
+                                                 (2, 2, 3), (0, 2, 2, 3)]))
+        holds = set([()])
+        self.assertEqual(recursive_gen_holds([0, 2, 2, 3, 3], 5, holds), 
+                                            set([(0, 3, 3), (0,), (0, 2, 3, 3),
+                                                (2, 2, 3), (2,), (2, 2, 3, 3), 
+                                                (3,), (0, 2, 2), (0, 2, 3), (),
+                                                (2, 3), (2, 3, 3), (2, 2), 
+                                                (0, 2, 2, 3), (0, 3), (0, 2, 2, 3, 3),
+                                                (0, 2), (3, 3)]))
+
+class GenerateSortedSequenceTest(unittest.TestCase):
+    """
+    Test generate_sorted_sequence method
+    """
+    def test(self):
+        """
+        Basic test for generate_sorted_sequence
+        """      
+        self.assertEqual(generate_sorted_sequence((1, 2, 3), 4), (1, 2, 3, 4))
+        self.assertEqual(generate_sorted_sequence((5, 2, 3), 4), (2, 3, 4, 5))
+
+
+class AddHoldToSetTest(unittest.TestCase):
+    """
+    Test add_hold_to_set method
+    """
+    def test(self):
+        """
+        Basic test for add_hold_to_set
+        """   
+        temp_set = set()
+        self.assertEqual(add_hold_to_set(temp_set, (1, 2, 5), 5), set([(1, 2, 5), (1, 2, 5, 5)]))
+        self.assertEqual(add_hold_to_set(temp_set, (2, 3, 4), 6), set([(1, 2, 5), (1, 2, 5, 5),
+                                                                       (2, 3, 4), (2, 3, 4, 6)]))
+
+class UpdateHoldTest(unittest.TestCase):
+    """
+    Test update_hold method
+    """
+    def test(self):
+        """
+        Basic test for update_hold
+        """   
+        temp_set = set()
+        self.assertEqual(update_hold(temp_set, (1, 2), (1, 1, 2, 3)), set([(1, 2), (1, 2, 3), (1, 1, 2)]))
+        temp_set = set()
+        self.assertEqual(update_hold(temp_set, (1, 2, 5), (1, 2, 3, 4, 5)), set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5)]))
+
+class GeneratePartialHoldsTest(unittest.TestCase):
+    """
+    Test generate_partial_holds method
+    """
+    def test(self):
+        """
+        Basic test for generate_partial_holds
+        """
+        holds = set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5)])
+        self.assertEqual(generate_partial_holds((1, 2, 3, 4, 5), holds), set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5), (1, 2, 3, 4, 5)]))
+        holds = set([()])
+        self.assertEqual(generate_partial_holds((1, 2), holds), set([(), (1, ), (2, )]))
+        holds = set([(), (1, ), (2, )])
+        self.assertEqual(generate_partial_holds((1, 2), holds), set([(), (1, ), (2, ), (1, 2)]))
+
+class UpdateSetTest(unittest.TestCase):
+    """
+    Test update_set method
+    """
+    def test(self):
+        """
+        Basic test for update_set
+        """   
+        temp_set = set()
+        self.assertEqual(update_set(temp_set, (1, 2), 3), set([(1, 2, 3)]))
+        temp_set = set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5)])
+        self.assertEqual(update_set(temp_set, (1, 2, 4, 5), 3), set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5), (1, 2, 4, 5, 3)]))
+               
+class AddOutComeToTempsetTest(unittest.TestCase):
+    """
+    Test add_outcome_to_tempset method
+    """
+    def test(self):
+        """
+        Basic test for add_outcome_to_tempset
+        """   
+        temp_set = set()
+        self.assertEqual(add_outcome_to_tempset(temp_set, (1, 2), [3, 2]), set([(1, 2, 3), (1, 2, 2)]))    
+        temp_set = set([(1, 2), (1, 3)])
+        self.assertEqual(add_outcome_to_tempset(temp_set, (1, 2), [5]), set([(1, 2), (1, 3), (1, 2, 5)]))    
+
+
+# update_sequences(all_sequences, outcomes)
