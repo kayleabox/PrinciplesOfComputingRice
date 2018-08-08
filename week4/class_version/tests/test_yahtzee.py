@@ -233,5 +233,18 @@ class AddOutComeToTempsetTest(unittest.TestCase):
         temp_set = set([(1, 2), (1, 3)])
         self.assertEqual(add_outcome_to_tempset(temp_set, (1, 2), [5]), set([(1, 2), (1, 3), (1, 2, 5)]))    
 
-
-# update_sequences(all_sequences, outcomes)
+class UpdateSequencesTest(unittest.TestCase):
+    """
+    Test update_sequences(all_sequences, outcomes) method
+    """
+    def test_update_sequences(self):
+        """
+        Test that update_sequences returns a set with the 
+        with a new tuple for each tuple that was in the set
+        for each outcome in the list
+        """
+        all_sequences = set([()])
+        outcomes = [3, 4]
+        self.assertEqual(update_sequences(all_sequences, outcomes), set([(3, ), (4, )]))
+        all_sequences = set([(3, ), (4, )])
+        self.assertEqual(update_sequences(all_sequences, outcomes), set([(3, 3), (3, 4), (4, 4), (4, 3)]))

@@ -58,7 +58,7 @@ class ExpectedValueTest(unittest.TestCase):
     """
     def test(self):
         """
-        Tests something...
+        Test the expected value of several different hands
         """
         held_dice = ()
         num_die_sides = 6
@@ -70,11 +70,13 @@ class ExpectedValueTest(unittest.TestCase):
 
 class GenAllHandsTest(unittest.TestCase):
     """
-    Test gen_all_hand method
+    Test generate_all_holds method
     """
     def test(self):
         """
-        Tests ...
+        Tests all of the possible combinations
+        of dice to hold are listed, order does not
+        matter
         """
         self.assertEqual(generate_all_holds([]), set([()]))
         self.assertEqual(generate_all_holds([1]), set([(), (1, )]))
@@ -96,12 +98,16 @@ class StrategyTest(unittest.TestCase):
     """
     Test strategy method
     """
-    def test(self):
+    def test_strategy(self):
         """
         Basic test for strategy
         """
         self.assertEqual(strategy((1,), 6), (3.5, ()))
 
+    def test_strategy_several_hands(self):
+        """
+        Tests strategy strategy with several hands
+        """
         hand = (1, 2, 3, 4, 4)
         possible_holds = list(generate_all_holds(hand))
         best_score = max([(expected_value(hold, 6, len(hand)-len(hold)), hold) for hold in possible_holds])
@@ -124,7 +130,7 @@ class RecursiveGenHoldsTest(unittest.TestCase):
     """
     def test(self):
         """
-        Basic test for recursive_gen_holds
+        Test for recursive_gen_holds
         """
         holds = set([()])
         self.assertEqual(recursive_generate_holds([1], 1, holds), set([(), (1, )]))
@@ -178,27 +184,47 @@ class GeneratePartialHoldsTest(unittest.TestCase):
     """
     Test generate_partial_holds method
     """
-    def test(self):
+    def test_generate_partial_holds_with_empty_set(self):
         """
-        Basic test for generate_partial_holds
+        Test that passing a tuple of numbers and an empty
+        set to generate_partial_holds returns a set with
+        with a tuple for each element in the tuple passed
+        the function
         """
-        holds = set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5)])
-        self.assertEqual(generate_partial_holds((1, 2, 3, 4, 5), holds), set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5), (1, 2, 3, 4, 5)]))
         holds = set([()])
         self.assertEqual(generate_partial_holds((1, 2), holds), set([(), (1, ), (2, )]))
+        holds = set([()])
+        self.assertEqual(generate_partial_holds((3, 4, 7), holds), set([(), (3, ), (4, ), (7, )]))
+
+    def test_generate_partial_holds_with_non_empty_set(self):
+        """
+        Test that generate_partial_holds takes in a tuple
+        of numbers and a set of tuples of numbers and
+        returns a set of tuples with the new tuple appended
+        """
+        holds = set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5)])
+        self.assertEqual(generate_partial_holds((1, 2, 3, 4, 5), holds), 
+                         set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5), (1, 2, 3, 4, 5)]))
         holds = set([(), (1, ), (2, )])
         self.assertEqual(generate_partial_holds((1, 2), holds), set([(), (1, ), (2, ), (1, 2)]))
 
 class GenerateSortedHoldTest(unittest.TestCase):
     """
-    Test generate_sorted_hold method
+    Test generate_sorted_hold(hold, value) method
     """
-    def test(self):
+    def test_generate_sorted_hold_with_empty_hold(self):
         """
-        Test for generate_sorted_hold
+        Test that generate_sorted_hold returns a tuple with
+        the value appended to it
         """
         self.assertEqual(generate_sorted_hold((), 3), (3, ))
-        self.assertEqual(generate_sorted_hold((1, 5, 2), 3), (1, 2, 3, 5))
+
+    def test_generate_sorted_hold_with_non_empty_hold(self):
+        """
+        Test that generate_sorted_hold returns a sorted tuple
+        with the value appended to it
+        """
+        self.assertEqual(generate_sorted_hold((1, 5, 3), 2), (1, 2, 3, 5))
         self.assertEqual(generate_sorted_hold((3, 6, 7, 1, 5, 2), 3), (1, 2, 3, 3, 5, 6, 7))
 
 class AddSequenceToSetTest(unittest.TestCase):
@@ -212,7 +238,9 @@ class AddSequenceToSetTest(unittest.TestCase):
         temp_set = set()
         self.assertEqual(add_sequence_to_set(temp_set, (1, 2), 3), set([(1, 2, 3)]))    
         temp_set = set([(1, 2), (1, 3)])
-        self.assertEqual(add_sequence_to_set(temp_set, (1, 2), 5), set([(1, 2), (1, 3), (1, 2, 5)]))    
+        self.assertEqual(add_sequence_to_set(temp_set, (1, 2), 5), set([(1, 2), (1, 3), (1, 2, 5)]))
+        temp_set = set([(1, 2, 3)])
+        self.assertEqual(add_sequence_to_set(temp_set, (1, 2, 3), 5), set([(1, 2, 3), (1, 2, 3, 5)]))    
 
 class RecursiveUpdateSetTest(unittest.TestCase):
     """
@@ -229,5 +257,57 @@ class RecursiveUpdateSetTest(unittest.TestCase):
                          set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5), 
                               (1, 2, 4, 5, 3), (1, 2, 4, 5, 1)]))
  
-# recursive_generate_sequences(outcomes, length, sequences)
-# update_sequences(all_sequences, outcomes)
+class RecursiveGenerateSequencesTest(unittest.TestCase):
+    """
+    Test recursive_generate_sequences(outcomes, length, sequences) method
+    """
+    def test_recursive_generate_sequences_without_outcomes(self):
+        """
+        Test that recursive_generate_sequences returns an empty set
+        when passed no outcomes
+        """
+        sequences = set([()])
+        self.assertEqual(recursive_generate_sequences([], 0, sequences), set([()]))
+    
+    def test_recursive_generate_sequences(self):
+        """
+        Test that recursive_generate_sequences returns all
+        the sequences of length, length that can be made
+        from outcomes with repeats included
+        """
+        outcomes = [1, 2, 3]
+        length = 1
+        sequences = set([()])
+        self.assertEqual(recursive_generate_sequences(outcomes, length, sequences), 
+                         set([(1, ), (2, ), (3, )]))
+        outcomes = [1, 2, 3]
+        length = 2
+        sequences = set([()])
+        self.assertEqual(recursive_generate_sequences(outcomes, length, sequences), 
+                         set([(1, 1), (1, 2), (1, 3), (2, 1), (2, 2), (2, 3),
+                             (3, 1), (3, 2), (3, 3)]))
+        outcomes = [1, 2, 3]
+        length = 3
+        sequences = set([()])
+        self.assertEqual(recursive_generate_sequences(outcomes, length, sequences), 
+                         set([(1, 1, 1), (1, 1, 2), (1, 1, 3), (1, 2, 1), (1, 2, 2), (1, 2, 3),
+                             (1, 3, 2), (1, 3, 1), (2, 1, 3), (2, 3, 1), (3, 1, 2), (3, 2, 1),
+                             (1, 3, 3), (2, 1, 1), (2, 1, 2), (2, 2, 2), (2, 2, 1), (2, 2, 3),
+                             (2, 3, 2), (2, 3, 3), (3, 1, 1), (3, 1, 3), (3, 3, 1), (3, 2, 2),
+                             (3, 2, 3), (3, 3, 2), (3, 3, 3) ]))
+
+class UpdateSequencesTest(unittest.TestCase):
+    """
+    Test update_sequences(all_sequences, outcomes) method
+    """
+    def test_update_sequences(self):
+        """
+        Test that update_sequences returns a set with the 
+        with a new tuple for each tuple that was in the set
+        for each outcome in the list
+        """
+        all_sequences = set([()])
+        outcomes = [3, 4]
+        self.assertEqual(update_sequences(all_sequences, outcomes), set([(3, ), (4, )]))
+        all_sequences = set([(3, ), (4, )])
+        self.assertEqual(update_sequences(all_sequences, outcomes), set([(3, 3), (3, 4), (4, 4), (4, 3)]))
