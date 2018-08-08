@@ -61,11 +61,11 @@ def recursive_generate_holds(hand, length, holds):
     Recursively generate all possible holds
     """
     return recursive_generate_holds(hand, length-1,
-                               generate_partial_holds(hand, holds)) if length else holds
+                               generate_temp_holds(hand, holds)) if length else holds
 
-def generate_partial_holds(hand, holds):
+def generate_temp_holds(hand, holds):
     """
-    Add a partial hold to the set of holds
+    Add a group of holds to the set of holds
     """
     temp_set = set()
     return [update_holds(temp_set, hold, hand) for hold in holds][0]
@@ -73,7 +73,7 @@ def generate_partial_holds(hand, holds):
 def update_holds(temp_set, hold, hand):
     """
     Update the holds with the next value in hand
-    if it has not been added to the hold
+    if it has not been added to the hold already
     """
     if hand: 
         if hand.count(hand[0]) > hold.count(hand[0]):
@@ -115,7 +115,8 @@ def recursive_generate_sequences(outcomes, length, sequences):
 def update_sequences(all_sequences, outcomes):
     """
     Iterate through the partial sequences in the list
-    and return the updated version
+    and append each outcome to it, return the set of 
+    sequences with outcomes added
     """
     temp_set = set()
     return [recursive_update_set(temp_set, sequence, outcomes)
@@ -123,8 +124,7 @@ def update_sequences(all_sequences, outcomes):
 
 def recursive_update_set(temp_set, sequence, outcomes):
     """
-    Return a new set with elements that should be in the
-    seqeunce appended to it
+    Return a new set with outcomes appended to it
     """
     if outcomes:
         temp_set.add(tuple(list(sequence) + [outcomes[0]]))

@@ -6,7 +6,7 @@ import unittest
 from src.yahtzee import(expected_value, gen_all_holds,
                         gen_all_sequences, score,
                         strategy, recursive_gen_holds,
-                        generate_partial_holds, update_hold,
+                        generate_temp_holds, update_hold,
                         add_hold_to_set, generate_sorted_sequence,
                         update_sequences, add_outcome_to_tempset,
                         update_set)
@@ -15,13 +15,6 @@ class GenAllSequencesTest(unittest.TestCase):
     """
     Tests for gen_all_sequences method
     """
-    # def test_gen_all_sequences_empty(self):
-    #     """
-    #     Test that  passing an empty output array to gen_all_sequences
-    #     returns an empty set
-    #     """
-    #     self.assertEqual(gen_all_sequences([], 1), set([]))
-
     def test_gen_all_sequences_length_one(self):
         """
         Test the case for all sequences of length 1
@@ -76,11 +69,12 @@ class ExpectedValueTest(unittest.TestCase):
 
 class GenAllHoldsTest(unittest.TestCase):
     """
-    Test gen_all_hand method
+    Test gen_all_holds method
     """
     def test(self):
         """
-        Tests ...
+        Test that gen_all_holds returns a set of all of
+        sorted tuples containing all of the possible holds
         """
         self.assertEqual(gen_all_holds([]), set([()]))
         self.assertEqual(gen_all_holds([1]), set([(), (1, )]))
@@ -201,11 +195,11 @@ class GeneratePartialHoldsTest(unittest.TestCase):
         Basic test for generate_partial_holds
         """
         holds = set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5)])
-        self.assertEqual(generate_partial_holds((1, 2, 3, 4, 5), holds), set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5), (1, 2, 3, 4, 5)]))
+        self.assertEqual(generate_temp_holds((1, 2, 3, 4, 5), holds), set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5), (1, 2, 3, 4, 5)]))
         holds = set([()])
-        self.assertEqual(generate_partial_holds((1, 2), holds), set([(), (1, ), (2, )]))
+        self.assertEqual(generate_temp_holds((1, 2), holds), set([(), (1, ), (2, )]))
         holds = set([(), (1, ), (2, )])
-        self.assertEqual(generate_partial_holds((1, 2), holds), set([(), (1, ), (2, ), (1, 2)]))
+        self.assertEqual(generate_temp_holds((1, 2), holds), set([(), (1, ), (2, ), (1, 2)]))
 
 class UpdateSetTest(unittest.TestCase):
     """

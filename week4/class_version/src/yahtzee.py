@@ -61,11 +61,11 @@ def recursive_gen_holds(hand, length, holds):
     Recursively generate all possible holds
     """
     return recursive_gen_holds(hand, length-1,
-                               generate_partial_holds(hand, holds)) if length else holds
+                               generate_temp_holds(hand, holds)) if length else holds
 
-def generate_partial_holds(hand, holds):
+def generate_temp_holds(hand, holds):
     """
-    Add a partial hold to the set of holds
+    Add a group of holds to the set of holds
     """
     temp_set = set()
     return [update_hold(temp_set, hold, hand) for hold in holds][0]
