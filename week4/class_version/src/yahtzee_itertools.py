@@ -58,6 +58,10 @@ def gen_all_holds(hand):
     return set(generate_powerset(hand))
 
 def generate_powerset(hand):
+    """
+    Returns an iterable with the powerset of
+    the array hand
+    """
     return chain.from_iterable(combinations(hand, number)
                                for number in range(len(hand)+1))
 
