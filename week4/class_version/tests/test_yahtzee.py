@@ -6,10 +6,10 @@ import unittest
 from src.yahtzee import(expected_value, gen_all_holds,
                         gen_all_sequences, score,
                         strategy, recursive_gen_holds,
-                        generate_temp_holds, update_hold,
-                        add_hold_to_set, generate_sorted_sequence,
+                        gen_temp_holds, update_hold,
+                        add_hold_to_set, gen_sorted_sequence,
                         update_sequences, add_outcome_to_tempset,
-                        update_set, powerset)
+                        update_set)
 
 class GenAllSequencesTest(unittest.TestCase):
     """
@@ -90,13 +90,7 @@ class GenAllHoldsTest(unittest.TestCase):
                                                            (3,), (0, 2, 2), (0, 2, 3), (),
                                                            (2, 3), (2, 3, 3), (2, 2), 
                                                            (0, 2, 2, 3), (0, 3), (0, 2, 2, 3, 3),
-                                                           (0, 2), (3, 3)])) 
-        self.assertEqual(set(list(powerset([0, 2, 2, 3, 3]))), set([(0, 3, 3), (0,), (0, 2, 3, 3),
-                                                           (2, 2, 3), (2,), (2, 2, 3, 3), 
-                                                           (3,), (0, 2, 2), (0, 2, 3), (),
-                                                           (2, 3), (2, 3, 3), (2, 2), 
-                                                           (0, 2, 2, 3), (0, 3), (0, 2, 2, 3, 3),
-                                                           (0, 2), (3, 3)]))       
+                                                           (0, 2), (3, 3)]))     
 
 class StrategyTest(unittest.TestCase):
     """
@@ -162,8 +156,8 @@ class GenerateSortedSequenceTest(unittest.TestCase):
         """
         Basic test for generate_sorted_sequence
         """      
-        self.assertEqual(generate_sorted_sequence((1, 2, 3), 4), (1, 2, 3, 4))
-        self.assertEqual(generate_sorted_sequence((5, 2, 3), 4), (2, 3, 4, 5))
+        self.assertEqual(gen_sorted_sequence((1, 2, 3), 4), (1, 2, 3, 4))
+        self.assertEqual(gen_sorted_sequence((5, 2, 3), 4), (2, 3, 4, 5))
 
 
 class AddHoldToSetTest(unittest.TestCase):
@@ -201,11 +195,11 @@ class GeneratePartialHoldsTest(unittest.TestCase):
         Basic test for generate_partial_holds
         """
         holds = set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5)])
-        self.assertEqual(generate_temp_holds((1, 2, 3, 4, 5), holds), set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5), (1, 2, 3, 4, 5)]))
+        self.assertEqual(gen_temp_holds((1, 2, 3, 4, 5), holds), set([(1, 2, 5), (1, 2, 3, 5), (1, 2, 4, 5), (1, 2, 3, 4, 5)]))
         holds = set([()])
-        self.assertEqual(generate_temp_holds((1, 2), holds), set([(), (1, ), (2, )]))
+        self.assertEqual(gen_temp_holds((1, 2), holds), set([(), (1, ), (2, )]))
         holds = set([(), (1, ), (2, )])
-        self.assertEqual(generate_temp_holds((1, 2), holds), set([(), (1, ), (2, ), (1, 2)]))
+        self.assertEqual(gen_temp_holds((1, 2), holds), set([(), (1, ), (2, ), (1, 2)]))
 
 class UpdateSetTest(unittest.TestCase):
     """

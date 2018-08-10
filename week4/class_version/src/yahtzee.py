@@ -28,7 +28,9 @@ def expected_value(held_dice, num_die_sides, num_free_dice):
     """
     dice_sides = range(1, num_die_sides+1)
     all_rolls = list(gen_all_sequences(dice_sides, num_free_dice))
-    return round(sum([score(held_dice + roll) for roll in all_rolls])/float(len(all_rolls)), 11)
+    summed_scores = sum([score(held_dice + roll) for roll in all_rolls])
+    num_rolls = float(len(all_rolls))
+    return round(summed_scores/num_rolls, 11)
 
 def strategy(hand, num_die_sides):
     """
@@ -41,9 +43,18 @@ def strategy(hand, num_die_sides):
     Returns a tuple where the first element is the expected score and
     the second element is a tuple of the dice to hold
     """
-    possible_holds = list(gen_all_holds(hand))
-    return max([(expected_value(hold, num_die_sides, len(hand)-len(hold)), hold)
-                for hold in possible_holds])
+    holds = list(gen_all_holds(hand))
+    expected_values = list(gen_all_expected_values(hand, num_die_sides, holds))
+    return max(expected_values)
+
+def gen_all_expected_values(hand, num_sides, holds):
+    """
+    Yield a tuple with the expected value and hold for each hold in holds
+    """
+    for hold in holds:
+        num_free_dice = len(hand)-len(hold)
+        expected_val = expected_value(hold, num_sides, num_free_dice)
+        yield(expected_val, hold)
 
 def gen_all_holds(hand):
     """
@@ -61,9 +72,9 @@ def recursive_gen_holds(hand, length, holds):
     Recursively generate all possible holds
     """
     return recursive_gen_holds(hand, length-1,
-                               generate_temp_holds(hand, holds)) if length else holds
+                               gen_temp_holds(hand, holds)) if length else holds
 
-def generate_temp_holds(hand, holds):
+def gen_temp_holds(hand, holds):
     """
     Add a group of holds to the set of holds
     """
@@ -81,11 +92,11 @@ def add_hold_to_set(temp_set, hold, value):
     """
     Add a new hold to the set of possible holds
     """
-    temp_set.add(generate_sorted_sequence(hold, value))
+    temp_set.add(gen_sorted_sequence(hold, value))
     temp_set.add(hold)
     return temp_set
 
-def generate_sorted_sequence(hold, value):
+def gen_sorted_sequence(hold, value):
     """
     Add value to an old hold to create a new hold
     """

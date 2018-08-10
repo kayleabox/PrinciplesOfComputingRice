@@ -30,7 +30,9 @@ def expected_value(held_dice, num_die_sides, num_free_dice):
     """
     dice_sides = range(1, num_die_sides+1)
     all_rolls = list(gen_all_sequences(dice_sides, num_free_dice))
-    return round(sum([score(held_dice + roll) for roll in all_rolls])/float(len(all_rolls)), 11)
+    summed_scores = sum([score(held_dice + roll) for roll in all_rolls])
+    num_rolls = float(len(all_rolls))
+    return round(summed_scores/num_rolls, 11)
 
 def strategy(hand, num_die_sides):
     """

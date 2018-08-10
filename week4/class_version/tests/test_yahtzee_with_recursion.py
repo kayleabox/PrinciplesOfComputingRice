@@ -9,8 +9,7 @@ from src.yahtzee_with_recursion import(expected_value, generate_all_holds,
                                        generate_temp_holds, update_holds,
                                        add_sorted_hold_to_set, generate_sorted_hold,
                                        recursive_generate_sequences,
-                                       update_sequences, recursive_update_set,
-                                       add_sequence_to_set)
+                                       update_sequences, recursive_update_set)
 
 
 class GenAllSequencesTest(unittest.TestCase):
@@ -232,24 +231,7 @@ class GenerateSortedHoldTest(unittest.TestCase):
         with the value appended to it
         """
         self.assertEqual(generate_sorted_hold((1, 5, 3), 2), (1, 2, 3, 5))
-        self.assertEqual(generate_sorted_hold((3, 6, 7, 1, 5, 2), 3), (1, 2, 3, 3, 5, 6, 7))
-
-class AddSequenceToSetTest(unittest.TestCase):
-    """
-    Test add_sequence_to_set(temp_set, sequence, outcome) method
-    """
-    def test_add_sequence_to_set(self):
-        """
-        Test that add_sequence_to_set returns a set
-        with the tuples in temp_set appended to it
-        and a new tuple with the sequence + outcome.
-        """   
-        temp_set = set()
-        self.assertEqual(add_sequence_to_set(temp_set, (1, 2), 3), set([(1, 2, 3)]))    
-        temp_set = set([(1, 2), (1, 3)])
-        self.assertEqual(add_sequence_to_set(temp_set, (1, 2), 5), set([(1, 2), (1, 3), (1, 2, 5)]))
-        temp_set = set([(1, 2, 3)])
-        self.assertEqual(add_sequence_to_set(temp_set, (1, 2, 3), 5), set([(1, 2, 3), (1, 2, 3, 5)]))    
+        self.assertEqual(generate_sorted_hold((3, 6, 7, 1, 5, 2), 3), (1, 2, 3, 3, 5, 6, 7)) 
 
 class RecursiveUpdateSetTest(unittest.TestCase):
     """
