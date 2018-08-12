@@ -53,3 +53,15 @@ class StrategyTest(unittest.TestCase):
 
         self.assertEqual(yahtzee.strategy((1,), 6), (3.5, ()), 1.0)
 
+class GenAllHoldsSequencesTest(unittest.TestCase):
+    """
+
+    """
+    def test(self):
+        """
+
+        """
+        yahtzee = YahtzeePsychic()
+
+        self.assertEqual(yahtzee.gen_all_holds([1, 2, 3]), set([(1, )]))
+        self.assertEqual(yahtzee.gen_all_sequences([1, 1, 1], 2), set([(1, )]))

@@ -2,10 +2,10 @@
 abstract class for yahtzee psychic
 """
 
-from abc import ABCMeta, abstractmethod
+from abc import ABC, ABCMeta, abstractmethod
 
-class IYahtzeePsychic:
-    __metaclass__ = ABCMeta
+class IYahtzeePsychic(ABC):
+    #__metaclass__ = ABCMeta
 
     @abstractmethod
     def score(self, hand): raise NotImplementedError
